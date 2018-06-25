@@ -175,6 +175,41 @@ public class WebsiteDao {
 
 		return w;
 	}
+	
+	/**
+	 * returns a record from Website table whose name field is equal to the websiteName
+	 * parameter
+	 * 
+	 * @param websiteName
+	 * @return
+	 */
+	public Website findWebsiteByName(String websiteName) {
+		Website w = new Website();
+		ResultSet results = null;
+		String sql = "SELECT * FROM website where name='" + websiteName+"'";
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			results = statement.executeQuery(sql);
+			if (results.next()) {
+				w.setId(results.getInt("id"));
+				w.setName(results.getString("name"));
+				w.setDescription(results.getString("description"));
+				w.setDeveloper(DeveloperDao.getInstance().findDeveloperById(results.getInt("developer_id")));
+				w.setVisits(results.getInt("visits"));
+				w.setPages(PageDao.getInstance().findPagesForWebsite(results.getInt("id")));
+				w.setCreated(results.getDate("created"));
+				w.setUpdated(results.getDate("updated"));
+			}
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return w;
+	}
 
 	/**
 	 * updates record in Website table whose id field is equal to websiteId

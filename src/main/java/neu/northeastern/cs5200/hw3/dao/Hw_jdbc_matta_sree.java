@@ -22,7 +22,18 @@ import neu.northeastern.cs5200.hw3.model.YouTubeWidget;
 
 @RestController
 public class Hw_jdbc_matta_sree {
-
+	
+	@RequestMapping(value = "/api/insert/all", method = RequestMethod.GET)
+	private String insertAllData() {
+		insertDevelopersAndUsers();
+		insertWebsites();
+		insertPages();
+		insertWidgets();
+		insertRoles();
+		insertPriviledges();
+		return "Inserted all Developer, Websites, Pages, Widgets, Roles, Priviledges. Please check database to see respective data";
+		
+	}
 	/**
 	 * Create developers and users. Insert into the correct tables depending on the
 	 * type
@@ -448,11 +459,11 @@ public class Hw_jdbc_matta_sree {
 	 *	2. Delete page - Remove the last updated page in Wikipedia
 	 * 	3. Delete website - Remove the CNET web site, as well as all related roles and privileges relating developers to the Website and Pages
 	 */
-	@RequestMapping(value = "/api/all/updates", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/all/deletes", method = RequestMethod.GET)
 	private String allDeletes() {
 		// 1. Delete widget - Remove the last widget in the Contact page. The last widget is the one with the highest value in the order field
-		Page contactPage = PageDao.getInstance().findPageByPageTitle("contact");
-		Collection<Widget> widgetsPerPage = WidgetDao.getInstance().findWidgetsForPage(contactPage.getId());
+		int contactPageId = PageDao.getInstance().findPageIdByPageTitle("contact");
+		Collection<Widget> widgetsPerPage = WidgetDao.getInstance().findWidgetsForPage(contactPageId);
 		Widget maxOrderWidget = null;
 		int maxOrder = 0;
 		for (Widget w: widgetsPerPage) {
@@ -461,6 +472,26 @@ public class Hw_jdbc_matta_sree {
 			}
 		}
 		WidgetDao.getInstance().deleteWidget(maxOrderWidget.getId());
+		
+		
+		// 2. Delete page - Remove the last updated page in Wikipedia
+		Collection<Page> pagesOfWikipedia = WebsiteDao.getInstance().findWebsiteByName("Wikipedia").getPages();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Page lastUpdatedPage = null;
+		for (Page p: pagesOfWikipedia) {
+			if(lastUpdatedPage == null) {
+			lastUpdatedPage = p;
+			} else
+				try {
+					if(sdf.parse(p.getUpdated().toString()).after(sdf.parse(lastUpdatedPage.getUpdated().toString()))){
+						lastUpdatedPage = p;	
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+		}
+		
+		PageDao.getInstance().deletePage(lastUpdatedPage.getId());
 		
 		return "Successfully deleted the records, please check database";
 	}

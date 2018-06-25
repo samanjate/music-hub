@@ -155,26 +155,18 @@ public class PageDao {
 	 * @param title
 	 * @return
 	 */
-	public Page findPageByPageTitle(String title) {
+	public int findPageIdByPageTitle(String title) {
 
 		ResultSet results = null;
-		Page p = new Page();
-		String sql = "SELECT * FROM page where title='" + title+"'";
+		int p=0;
+		String sql = "SELECT id FROM page where title='" + title+"'";
 
 		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement statement = connection.prepareStatement(sql)) {
 			Class.forName("com.mysql.jdbc.Driver");
 			results = statement.executeQuery(sql);
 			if (results.next()) {
-
-				p.setId(results.getInt("id"));
-				p.setTitle(results.getString("title"));
-				p.setDescription(results.getString("description"));
-				p.setWebsite(WebsiteDao.getInstance().findWebsiteById(results.getInt("website_id")));
-				p.setViews(results.getInt("views"));
-				p.setWidgets(WidgetDao.getInstance().findWidgetsForPage(results.getInt("id")));
-				p.setCreated(results.getDate("created"));
-				p.setUpdated(results.getDate("updated"));
+				p = results.getInt("id");
 			}
 			statement.close();
 			connection.close();
