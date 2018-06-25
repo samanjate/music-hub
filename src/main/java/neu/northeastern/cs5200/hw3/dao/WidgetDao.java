@@ -416,7 +416,118 @@ public class WidgetDao {
 	 * @return
 	 */
 	public int updateWidget(int widgetId, Widget widget) {
-		return widgetId;
+		int result = 0;
+		String sql = "UPDATE widget set name=?,width=?,height=?,css_class=?,css_style=?,text=?,dtype=?,size=?,html=?,src=?,url=?,shareble=?,expandable=?,widget_order=?,page_id=?)";
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			statement.setString(1, widget.getName());
+			statement.setInt(2, widget.getWidth());
+			statement.setInt(3, widget.getHeight());
+
+			if (widget.getCssClass() == null) {
+				statement.setNull(4, Types.VARCHAR);
+			} else {
+				statement.setString(4, widget.getCssClass());
+			}
+
+			if (widget.getCssStyle() == null) {
+				statement.setNull(5, Types.VARCHAR);
+			} else {
+				statement.setString(5, widget.getCssStyle());
+			}
+
+			if (widget.getText() == null) {
+				statement.setNull(6, Types.VARCHAR);
+			} else {
+				statement.setString(6, widget.getText());
+			}
+
+			if (widget instanceof HeadingWidget) {
+				statement.setString(7, "heading");
+				if (((HeadingWidget) widget).getSize() == 0) {
+					statement.setNull(8, Types.INTEGER);
+				} else {
+					statement.setInt(8, ((HeadingWidget) widget).getSize());
+				}
+
+				statement.setNull(9, Types.VARCHAR);
+				statement.setNull(10, Types.VARCHAR);
+				statement.setNull(11, Types.VARCHAR);
+				statement.setNull(12, Types.BOOLEAN);
+				statement.setNull(13, Types.BOOLEAN);
+
+			}
+			if (widget instanceof HtmlWidget) {
+
+				statement.setString(7, "html");
+				statement.setNull(8, Types.INTEGER);
+
+				if (((HtmlWidget) widget).getHtml() == null) {
+					statement.setNull(9, Types.VARCHAR);
+				} else {
+					statement.setString(9, ((HtmlWidget) widget).getHtml());
+				}
+
+				statement.setNull(10, Types.VARCHAR);
+				statement.setNull(11, Types.VARCHAR);
+				statement.setNull(12, Types.BOOLEAN);
+				statement.setNull(13, Types.BOOLEAN);
+			}
+			if (widget instanceof ImageWidget) {
+
+				statement.setString(7, "image");
+				statement.setNull(8, Types.INTEGER);
+				statement.setNull(9, Types.VARCHAR);
+
+				if (((ImageWidget) widget).getSrc() == null) {
+					statement.setNull(10, Types.VARCHAR);
+				} else {
+					statement.setString(10, ((ImageWidget) widget).getSrc());
+				}
+
+				statement.setNull(11, Types.VARCHAR);
+				statement.setNull(12, Types.BOOLEAN);
+				statement.setNull(13, Types.BOOLEAN);
+			}
+			if (widget instanceof YouTubeWidget) {
+
+				statement.setString(7, "youtube");
+				statement.setInt(8, Types.VARCHAR);
+				statement.setNull(9, Types.VARCHAR);
+				statement.setNull(10, Types.VARCHAR);
+
+				if (((YouTubeWidget) widget).getUrl() == null) {
+					statement.setNull(11, Types.VARCHAR);
+				} else {
+					statement.setString(11, ((YouTubeWidget) widget).getUrl());
+				}
+
+				if (((YouTubeWidget) widget).getShareble() == null) {
+					statement.setNull(12, Types.BOOLEAN);
+				} else {
+					statement.setBoolean(12, ((YouTubeWidget) widget).getShareble());
+				}
+
+				if (((YouTubeWidget) widget).getExpandable() == null) {
+					statement.setNull(13, Types.BOOLEAN);
+				} else {
+					statement.setBoolean(13, ((YouTubeWidget) widget).getExpandable());
+				}
+
+			}
+			statement.setInt(14, widget.getWidgetOrder());
+			statement.setInt(15, widget.getPage().getId());
+
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
 
 	}
 
