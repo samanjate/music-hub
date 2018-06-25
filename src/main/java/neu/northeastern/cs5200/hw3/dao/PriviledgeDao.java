@@ -140,6 +140,32 @@ public class PriviledgeDao {
 		return result;
 
 	}
+	
+	/**
+	 * deletes from table Priviledge a record that removes priviledgeId from
+	 * developerId, on websiteId
+	 * 
+	 * @param websiteId
+	 * @return
+	 */
+	public int deleteWebsitePriviledgeByWebsiteId(int websiteId) {
+		int result = 0;
+		String sql = "DELETE from priviledge where website_id="+websiteId;
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
+
+	}
 
 	/**
 	 * deletes from table priviledge a record that removes priviledgeId from
@@ -152,6 +178,31 @@ public class PriviledgeDao {
 	public int deletePagePriviledge(int developerId, int pageId, int priviledgeId) {
 		int result = 0;
 		String sql = "DELETE from priviledge where developer_id=" + developerId+" and page_id="+pageId+" and priviledge_type_id="+priviledgeId;
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
+
+	}
+	
+	/**
+	 * deletes from table priviledge a record that removes priviledgeId from
+	 * developerId, on pageId
+	 * 
+	 * @param pageId
+	 */
+	public int deletePagePriviledgeByPageId(int pageId) {
+		int result = 0;
+		String sql = "DELETE from priviledge where page_id="+pageId;
 
 		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement statement = connection.prepareStatement(sql)) {

@@ -22,7 +22,7 @@ import neu.northeastern.cs5200.hw3.model.YouTubeWidget;
 
 @RestController
 public class Hw_jdbc_matta_sree {
-	
+
 	@RequestMapping(value = "/api/insert/all", method = RequestMethod.GET)
 	private String insertAllData() {
 		insertDevelopersAndUsers();
@@ -32,8 +32,9 @@ public class Hw_jdbc_matta_sree {
 		insertRoles();
 		insertPriviledges();
 		return "Inserted all Developer, Websites, Pages, Widgets, Roles, Priviledges. Please check database to see respective data";
-		
+
 	}
+
 	/**
 	 * Create developers and users. Insert into the correct tables depending on the
 	 * type
@@ -444,55 +445,55 @@ public class Hw_jdbc_matta_sree {
 	/**
 	 * Q: Using the DAOs implemented earlier, do the following updates Update widget
 	 * 1. Update the relative order of widget head345 on the page so that it's new
-	 * order is 3. Note that the other widget's order needs to update as well 
-	 * 2. Update page - Append 'CNET - ' to the beginning of all CNET's page titles 
-	 * 3. Update roles - Swap Charlie's and Bob's role in CNET's Home page
+	 * order is 3. Note that the other widget's order needs to update as well 2.
+	 * Update page - Append 'CNET - ' to the beginning of all CNET's page titles 3.
+	 * Update roles - Swap Charlie's and Bob's role in CNET's Home page
 	 */
 	@RequestMapping(value = "/api/all/updates", method = RequestMethod.GET)
 	private String allUpdates() {
 		return "Successfully updated the records, please check database";
 	}
-	
+
 	/**
-	 * 	Q: Using the DAOs implemented earlier, do the following deletes
-	 * 	1. Delete widget - Remove the last widget in the Contact page. The last widget is the one with the highest value in the order field
-	 *	2. Delete page - Remove the last updated page in Wikipedia
-	 * 	3. Delete website - Remove the CNET web site, as well as all related roles and privileges relating developers to the Website and Pages
+	 * Q: Using the DAOs implemented earlier, do the following deletes 1. Delete
+	 * widget - Remove the last widget in the Contact page. The last widget is the
+	 * one with the highest value in the order field 2. Delete page - Remove the
+	 * last updated page in Wikipedia 3. Delete website - Remove the CNET web site,
+	 * as well as all related roles and privileges relating developers to the
+	 * Website and Pages
 	 */
 	@RequestMapping(value = "/api/all/deletes", method = RequestMethod.GET)
 	private String allDeletes() {
-		// 1. Delete widget - Remove the last widget in the Contact page. The last widget is the one with the highest value in the order field
-		int contactPageId = PageDao.getInstance().findPageIdByPageTitle("contact");
+		// 1. Delete widget - Remove the last widget in the Contact page. The last
+		// widget is the one with the highest value in the order field
+		int contactPageId = PageDao.getInstance().findPageIdByPageTitle("Contact");
 		Collection<Widget> widgetsPerPage = WidgetDao.getInstance().findWidgetsForPage(contactPageId);
 		Widget maxOrderWidget = null;
 		int maxOrder = 0;
-		for (Widget w: widgetsPerPage) {
-			if(maxOrder>= w.getWidgetOrder()) {
+		for (Widget w : widgetsPerPage) {
+			if (maxOrder <= w.getWidgetOrder()) {
 				maxOrderWidget = w;
+				maxOrder = w.getWidgetOrder();
 			}
 		}
 		WidgetDao.getInstance().deleteWidget(maxOrderWidget.getId());
-		
-		
-		// 2. Delete page - Remove the last updated page in Wikipedia
-		Collection<Page> pagesOfWikipedia = WebsiteDao.getInstance().findWebsiteByName("Wikipedia").getPages();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Page lastUpdatedPage = null;
-		for (Page p: pagesOfWikipedia) {
-			if(lastUpdatedPage == null) {
-			lastUpdatedPage = p;
-			} else
-				try {
-					if(sdf.parse(p.getUpdated().toString()).after(sdf.parse(lastUpdatedPage.getUpdated().toString()))){
-						lastUpdatedPage = p;	
-					}
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+
+		// 3. Delete website - Remove the CNET web site, as well as all related roles
+		// and privileges relating developers to the Website and Pages
+		String websiteDelete = "CNET";
+		Website cnetWebsite = WebsiteDao.getInstance().findWebsiteByName(websiteDelete);
+		WebsiteDao.getInstance().deleteWebsiteByName("CNET");// delete website
+		PageDao.getInstance().deletePageByWebsiteId(cnetWebsite.getId());// delete pages related to website
+		RoleDao.getInstance().deleteWebsiteRoleByWebsiteId(cnetWebsite.getId());// delete website roles
+		for (Page p : cnetWebsite.getPages()) {
+			RoleDao.getInstance().deletePageRoleByPageId(p.getId()); // delete website-page roles
 		}
-		
-		PageDao.getInstance().deletePage(lastUpdatedPage.getId());
-		
+
+		PriviledgeDao.getInstance().deleteWebsitePriviledgeByWebsiteId(cnetWebsite.getId());// delete website priviledge
+		for (Page p : cnetWebsite.getPages()) {
+			RoleDao.getInstance().deletePageRoleByPageId(p.getId()); // delete website-page priviledges
+		}
+
 		return "Successfully deleted the records, please check database";
 	}
 

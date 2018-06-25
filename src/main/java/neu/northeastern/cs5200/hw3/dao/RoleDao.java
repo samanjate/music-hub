@@ -140,6 +140,33 @@ public class RoleDao {
 		return result;
 
 	}
+	
+	/**
+	 * deletes from table Role a record that removes roleId from developerId, on
+	 * websiteId
+	 * 
+	 * @param developerId
+	 * @param websiteId
+	 * @param roleId
+	 */
+	public int deleteWebsiteRoleByWebsiteId(int websiteId) {
+		int result = 0;
+		String sql = "DELETE from role where website_id="+websiteId;
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
+
+	}
 
 	/**
 	 * deletes from table Role a record that removes roleId from developerId, on
@@ -152,6 +179,33 @@ public class RoleDao {
 	public int deletePageRole(int developerId, int pageId, int roleId) {
 		int result = 0;
 		String sql = "DELETE from role where developer_id=" + developerId+" and page_id="+pageId+" and role_type_id="+roleId;
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
+
+	}
+	
+	/**
+	 * deletes from table Role a record that removes roleId on
+	 * pageId
+	 * 
+	 * @param developerId
+	 * @param pageId
+	 * @param roleId
+	 */
+	public int deletePageRoleByPageId(int pageId) {
+		int result = 0;
+		String sql = "DELETE from role where page_id="+pageId;
 
 		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement statement = connection.prepareStatement(sql)) {

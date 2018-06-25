@@ -158,8 +158,8 @@ public class PageDao {
 	public int findPageIdByPageTitle(String title) {
 
 		ResultSet results = null;
-		int p=0;
-		String sql = "SELECT id FROM page where title='" + title+"'";
+		int p = 0;
+		String sql = "SELECT id FROM page where title='" + title + "'";
 
 		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -179,7 +179,6 @@ public class PageDao {
 
 	}
 
-	
 	/**
 	 * returns all records from Page table as a Collection of Page instances whose
 	 * websiteId is equal to the websiteId parameter
@@ -264,6 +263,44 @@ public class PageDao {
 	public int deletePage(int pageId) {
 		int result = 0;
 		String sql = "DELETE from page where id=" + pageId;
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
+	}
+
+	public int deleteLastUpdatedPageInWebsite(int websiteId) {
+
+		int result = 0;
+		String sql = "DELETE from page where updated=(SELECT max(updated) from page where website_id=" + websiteId
+				+ ") and website_id=" + websiteId;
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
+	}
+
+	public int deletePageByWebsiteId(int websiteId) {
+		int result = 0;
+		String sql = "DELETE from page where website_id=" + websiteId;
 
 		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement statement = connection.prepareStatement(sql)) {

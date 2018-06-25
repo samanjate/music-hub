@@ -271,5 +271,30 @@ public class WebsiteDao {
 
 		return result;
 	}
+	
+	/**
+	 * deletes record from Website table whose name field is equal to websiteName
+	 * parameter
+	 * 
+	 * @param websiteName
+	 * @return
+	 */
+	public int deleteWebsiteByName(String websiteName) {
+		int result = 0;
+		String sql = "DELETE from website where name='" + websiteName+"'";
+
+		try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			Class.forName("com.mysql.jdbc.Driver");
+			result = statement.executeUpdate();
+
+			connection.close();
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return result;
+	}
 
 }

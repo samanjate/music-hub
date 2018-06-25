@@ -188,6 +188,8 @@ public class WidgetDao {
 					w.setCssClass(results.getString("css_class"));
 					w.setCssStyle(results.getString("css_style"));
 					w.setText(results.getString("text"));
+					w.setWidgetOrder(results.getInt("widget_order"));
+					
 					widgets.add(w);
 				} else if (results.getString("dtype").equals("html")) {
 					HtmlWidget w = new HtmlWidget();
@@ -268,6 +270,7 @@ public class WidgetDao {
 					w.setCssClass(results.getString("css_class"));
 					w.setCssStyle(results.getString("css_style"));
 					w.setText(results.getString("text"));
+					w.setWidgetOrder(results.getInt("widget_order"));
 
 					connection.close();
 					return w;
@@ -282,6 +285,7 @@ public class WidgetDao {
 					w.setCssClass(results.getString("css_class"));
 					w.setCssStyle(results.getString("css_style"));
 					w.setText(results.getString("text"));
+					w.setWidgetOrder(results.getInt("widget_order"));
 					connection.close();
 					return w;
 
@@ -296,6 +300,8 @@ public class WidgetDao {
 					w.setCssClass(results.getString("css_class"));
 					w.setCssStyle(results.getString("css_style"));
 					w.setText(results.getString("text"));
+					w.setWidgetOrder(results.getInt("widget_order"));
+
 					connection.close();
 					return w;
 
@@ -312,6 +318,8 @@ public class WidgetDao {
 					w.setCssClass(results.getString("css_class"));
 					w.setCssStyle(results.getString("css_style"));
 					w.setText(results.getString("text"));
+					w.setWidgetOrder(results.getInt("widget_order"));
+
 					connection.close();
 					return w;
 				}
@@ -344,6 +352,7 @@ public class WidgetDao {
 				if (results.getString("dtype").equals("heading")) {
 					HeadingWidget w = new HeadingWidget();
 					w.setSize(results.getInt("size"));
+					w.setWidgetOrder(results.getInt("widget_order"));
 
 					w.setId(results.getInt("id"));
 					w.setName(results.getString("name"));
@@ -356,6 +365,7 @@ public class WidgetDao {
 				} else if (results.getString("dtype").equals("html")) {
 					HtmlWidget w = new HtmlWidget();
 					w.setHtml(results.getString("html"));
+					w.setWidgetOrder(results.getInt("widget_order"));
 
 					w.setId(results.getInt("id"));
 					w.setName(results.getString("name"));
@@ -369,6 +379,8 @@ public class WidgetDao {
 				} else if (results.getString("dtype").equals("image")) {
 					ImageWidget w = new ImageWidget();
 					w.setSrc(results.getString("src"));
+
+					w.setWidgetOrder(results.getInt("widget_order"));
 
 					w.setId(results.getInt("id"));
 					w.setName(results.getString("name"));
@@ -384,6 +396,7 @@ public class WidgetDao {
 					w.setUrl(results.getString("url"));
 					w.setShareble(results.getBoolean("shareble"));
 					w.setExpandable(results.getBoolean("expandable"));
+					w.setWidgetOrder(results.getInt("widget_order"));
 
 					w.setId(results.getInt("id"));
 					w.setName(results.getString("name"));
