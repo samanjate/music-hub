@@ -4,12 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@Entity
 public class Album implements Serializable{
 
 
@@ -24,13 +29,20 @@ public class Album implements Serializable{
 
 	private String name;
 	private String albumLink;
-	private List<Track> tracks;
+	
+//	private List<Track> tracks;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date releaseDate;
 	private String copyright;
 	private String accountPartner;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
 	private Artist leadingArtist;
-	private List<Artist> contributingArtist;
+	
+//	private List<Artist> contributingArtist;
+	
 	public int getId() {
 		return id;
 	}
@@ -49,12 +61,12 @@ public class Album implements Serializable{
 	public void setAlbumLink(String albumLink) {
 		this.albumLink = albumLink;
 	}
-	public List<Track> getTracks() {
-		return tracks;
-	}
-	public void setTracks(List<Track> tracks) {
-		this.tracks = tracks;
-	}
+//	public List<Track> getTracks() {
+//		return tracks;
+//	}
+//	public void setTracks(List<Track> tracks) {
+//		this.tracks = tracks;
+//	}
 	public Date getReleaseDate() {
 		return releaseDate;
 	}
@@ -79,12 +91,12 @@ public class Album implements Serializable{
 	public void setLeadingArtist(Artist leadingArtist) {
 		this.leadingArtist = leadingArtist;
 	}
-	public List<Artist> getContributingArtist() {
-		return contributingArtist;
-	}
-	public void setContributingArtist(List<Artist> contributingArtist) {
-		this.contributingArtist = contributingArtist;
-	}
+//	public List<Artist> getContributingArtist() {
+//		return contributingArtist;
+//	}
+//	public void setContributingArtist(List<Artist> contributingArtist) {
+//		this.contributingArtist = contributingArtist;
+//	}
 	
 
 }

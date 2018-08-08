@@ -3,10 +3,15 @@ package neu.northeastern.cs5200.models;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+@Entity
 public class Track implements Serializable{
 
 	/**
@@ -20,9 +25,15 @@ public class Track implements Serializable{
 
 	private String name;
 	private int playbackSeconds;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
 	private Artist artist;
-	private List<Genre> genres;
+	
+//	private List<Genre> genres;
+//	
 	private String previewUrl;
+	
 	public int getId() {
 		return id;
 	}
@@ -47,12 +58,12 @@ public class Track implements Serializable{
 	public void setArtist(Artist artist) {
 		this.artist = artist;
 	}
-	public List<Genre> getGenres() {
-		return genres;
-	}
-	public void setGenres(List<Genre> genres) {
-		this.genres = genres;
-	}
+//	public List<Genre> getGenres() {
+//		return genres;
+//	}
+//	public void setGenres(List<Genre> genres) {
+//		this.genres = genres;
+//	}
 	public String getPreviewUrl() {
 		return previewUrl;
 	}

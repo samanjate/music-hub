@@ -3,10 +3,18 @@ package neu.northeastern.cs5200.models;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@Entity
 public class Biodata implements Serializable {
 
 	/**
@@ -14,15 +22,29 @@ public class Biodata implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	private String title;
-	private Writer writer;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date publishDate;
 	@Lob
 	private String bio;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
 	private Artist artist;
-	
-	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
+	private Writer writer;
+		
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getTitle() {
 		return title;
 	}

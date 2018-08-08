@@ -3,6 +3,10 @@ package neu.northeastern.cs5200.models;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Artist extends Person implements Serializable {
 
 	/**
@@ -12,11 +16,19 @@ public class Artist extends Person implements Serializable {
 
 	private String artistLink;
 	private String shortcut;
-	private List<String> blurbs;
+		
+	@OneToMany(mappedBy = "artist")
 	private List<Biodata> bios;
-	private List<Album> groupAlbums;
+	
+//	@OneToMany(mappedBy = "contributingArtist")
+//	private List<Album> groupAlbums;
+	
+	@OneToMany(mappedBy = "leadingArtist")
 	private List<Album> singleAlbums;
+	
+	@OneToMany(mappedBy = "artist")
 	private List<Track> tracks;
+	
 	public String getArtistLink() {
 		return artistLink;
 	}
@@ -29,24 +41,19 @@ public class Artist extends Person implements Serializable {
 	public void setShortcut(String shortcut) {
 		this.shortcut = shortcut;
 	}
-	public List<String> getBlurbs() {
-		return blurbs;
-	}
-	public void setBlurbs(List<String> blurbs) {
-		this.blurbs = blurbs;
-	}
+	
 	public List<Biodata> getBios() {
 		return bios;
 	}
 	public void setBios(List<Biodata> bios) {
 		this.bios = bios;
 	}
-	public List<Album> getGroupAlbums() {
-		return groupAlbums;
-	}
-	public void setGroupAlbums(List<Album> groupAlbums) {
-		this.groupAlbums = groupAlbums;
-	}
+//	public List<Album> getGroupAlbums() {
+//		return groupAlbums;
+//	}
+//	public void setGroupAlbums(List<Album> groupAlbums) {
+//		this.groupAlbums = groupAlbums;
+//	}
 	public List<Album> getSingleAlbums() {
 		return singleAlbums;
 	}
