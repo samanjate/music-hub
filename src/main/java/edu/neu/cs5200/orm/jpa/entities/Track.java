@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -56,6 +57,19 @@ public class Track implements Serializable{
 	@Fetch(value = FetchMode.SUBSELECT)
 	@JsonIgnore
 	private List<Genre> playlists;
+	
+	@OneToMany(mappedBy = "track")
+	private List<Rating> ratings;
+	
+	@ManyToMany
+	@JoinTable(name="TRACK2CRITIC", 
+	joinColumns=@JoinColumn(name="TRACK_ID", 
+	referencedColumnName="ID"),
+	inverseJoinColumns=@JoinColumn(name="CRITIC_ID", 
+	referencedColumnName="ID"))
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonIgnore
+	private List<Critic> likers;
 
 	private String previewUrl;
 	
@@ -115,11 +129,27 @@ public class Track implements Serializable{
 		this.previewUrl = previewUrl;
 	}
 	
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+	
 	public List<Genre> getPlaylists() {
 		return playlists;
 	}
 
 	public void setPlaylists(List<Genre> playlists) {
 		this.playlists = playlists;
+	}
+	
+	public List<Critic> getLikers() {
+		return likers;
+	}
+
+	public void setLikers(List<Critic> likers) {
+		this.likers = likers;
 	}
 }

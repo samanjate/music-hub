@@ -26,9 +26,7 @@ import edu.neu.cs5200.orm.jpa.types.Privacy;
 
 @Entity
 public class Playlist implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
