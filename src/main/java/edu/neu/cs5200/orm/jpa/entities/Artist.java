@@ -23,71 +23,62 @@ public class Artist extends Person implements Serializable {
 
 	private String artistLink;
 	private String shortcut;
-	
+
 	@OneToMany(mappedBy = "artist")
 	private List<Biodata> bios;
-	
+
 	@ManyToMany
-	@JoinTable(name="ALBUM2ARTIST", 
-	joinColumns=@JoinColumn(name="ARTIST_ID", 
-	referencedColumnName="ID"),
-	inverseJoinColumns=@JoinColumn(name="ALBUM_ID", 
-	referencedColumnName="ID"))
+	@JoinTable(name = "ALBUM2ARTIST", joinColumns = @JoinColumn(name = "ARTIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ALBUM_ID", referencedColumnName = "ID"))
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JsonIgnore
 	private List<Album> albums;
-	
+
 	@OneToMany(mappedBy = "artist")
 	private List<Track> tracks;
-	
+
 	@OneToMany(mappedBy = "artist")
 	private List<Review> reviews;
 
+	
+	
 	public String getArtistLink() {
 		return artistLink;
 	}
-	
+
 	public void setArtistLink(String artistLink) {
 		this.artistLink = artistLink;
 	}
-	
+
 	public String getShortcut() {
 		return shortcut;
 	}
-	
+
 	public void setShortcut(String shortcut) {
 		this.shortcut = shortcut;
 	}
-	
+
 	public List<Biodata> getBios() {
 		return bios;
 	}
+
 	public void setBios(List<Biodata> bios) {
 		this.bios = bios;
 	}
-	
-	public List<Album> getSingleAlbums() {
-		return albums;
-	}
-	
-	public void setSingleAlbums(List<Album> albums) {
-		this.albums = albums;
-	}
-	
-	public List<Track> getTracks() {
-		return tracks;
-	}
-	
-	public void setTracks(List<Track> tracks) {
-		this.tracks = tracks;
-	}
-	
+
 	public List<Album> getAlbums() {
 		return albums;
 	}
 
 	public void setAlbums(List<Album> albums) {
 		this.albums = albums;
+	}
+
+	public List<Track> getTracks() {
+		return tracks;
+	}
+
+	public void setTracks(List<Track> tracks) {
+		this.tracks = tracks;
 	}
 
 	public List<Review> getReviews() {
@@ -97,11 +88,11 @@ public class Artist extends Person implements Serializable {
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
-	
+
 	public Artist() {
-		
+
 	}
-	
+
 	public Artist(Person p) {
 		this.setFirstName(p.getFirstName());
 		this.setLastName(p.getLastName());

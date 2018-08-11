@@ -7,9 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -23,11 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Critic extends Person implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	
+		
 	@OneToMany(mappedBy = "critic")
 	private List<Rating> ratings;
 	
@@ -38,14 +31,6 @@ public class Critic extends Person implements Serializable {
 	@Fetch(value = FetchMode.SUBSELECT)
 	@JsonIgnore
 	private List<Track> likes;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public List<Rating> getRatings() {
 		return ratings;
