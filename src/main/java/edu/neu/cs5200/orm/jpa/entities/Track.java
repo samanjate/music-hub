@@ -62,7 +62,7 @@ public class Track implements Serializable{
 	private List<Rating> ratings;
 	
 	@ManyToMany
-	@JoinTable(name="TRACK2CRITIC", 
+	@JoinTable(name="LIKES", 
 	joinColumns=@JoinColumn(name="TRACK_ID", 
 	referencedColumnName="ID"),
 	inverseJoinColumns=@JoinColumn(name="CRITIC_ID", 

@@ -16,8 +16,8 @@ public class Message implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private Person to;
-	private Person from;
+	private Person toPerson;
+	private Person fromPerson;
 	private String subject;
 	private String text;
 	private Date timestamp;
@@ -36,19 +36,19 @@ public class Message implements Serializable {
 	}
 	
 	public Person getTo() {
-		return to;
+		return toPerson;
 	}
 	
 	public void setTo(Person to) {
-		this.to = to;
+		this.toPerson = to;
 	}
 	
 	public Person getFrom() {
-		return from;
+		return fromPerson;
 	}
 	
 	public void setFrom(Person from) {
-		this.from = from;
+		this.fromPerson = from;
 	}
 	
 	public String getSubject() {
