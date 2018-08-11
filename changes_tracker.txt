@@ -2,4 +2,4 @@
 
 Date: 8/11-12.59
 - id not required in Critic table as it is extends Person class
-- updated getters and setters in Album entity (reason: pointing to stale getters and setters)
+- updated getters and setters in Artist, Album entity (reason: pointing to stale getters and setters)
