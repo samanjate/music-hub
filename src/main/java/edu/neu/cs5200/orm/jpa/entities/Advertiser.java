@@ -3,15 +3,14 @@ package edu.neu.cs5200.orm.jpa.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
+@DiscriminatorValue("ADVERTISER")
 public class Advertiser extends Person implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@OneToMany(mappedBy = "advertiser")

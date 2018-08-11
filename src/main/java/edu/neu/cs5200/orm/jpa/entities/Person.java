@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,9 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DTYPE")
 public class Person implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -32,7 +31,8 @@ public class Person implements Serializable {
 
 	private String firstName;
 	private String lastName;
-
+	
+	@Column(unique=true)
 	private String email;
 	private String password;
 
@@ -42,15 +42,18 @@ public class Person implements Serializable {
 	@OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Playlist> playlists;
+	
 	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Person> followers;
+	
 	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Person> following;
-	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	
+	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<Person> likes;
+	private List<Message> messages;
 
 	public int getId() {
 		return id;
@@ -112,14 +115,6 @@ public class Person implements Serializable {
 		this.following = following;
 	}
 
-	public List<Person> getLikes() {
-		return likes;
-	}
-
-	public void setLikes(List<Person> likes) {
-		this.likes = likes;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -134,6 +129,14 @@ public class Person implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
 	}
 
 }

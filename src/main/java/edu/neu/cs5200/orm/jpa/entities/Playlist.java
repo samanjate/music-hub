@@ -2,6 +2,7 @@ package edu.neu.cs5200.orm.jpa.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,10 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.neu.cs5200.orm.jpa.types.Privacy;
 
@@ -38,7 +46,15 @@ public class Playlist implements Serializable {
 	private String description;
 	private Boolean freePlayCompliant;
 	
-//	private List<Track> tracks;
+	@ManyToMany
+	@JoinTable(name="PLAYLIST2TRACK", 
+	joinColumns=@JoinColumn(name="PLAYLIST_ID", 
+	referencedColumnName="ID"),
+	inverseJoinColumns=@JoinColumn(name="TRACK_ID", 
+	referencedColumnName="ID"))
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@JsonIgnore
+	private List<Track> tracks;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
@@ -108,12 +124,12 @@ public class Playlist implements Serializable {
 		this.freePlayCompliant = freePlayCompliant;
 	}
 
-//	public List<Track> getTracks() {
-//		return tracks;
-//	}
-//
-//	public void setTracks(List<Track> tracks) {
-//		this.tracks = tracks;
-//	}
+	public List<Track> getTracks() {
+		return tracks;
+	}
+
+	public void setTracks(List<Track> tracks) {
+		this.tracks = tracks;
+	}
 
 }
