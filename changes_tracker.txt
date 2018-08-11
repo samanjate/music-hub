@@ -1,5 +1,5 @@
 ## tail changes made to backend code in this file
 
-Date: 8/11-12.59
+Date: 8/11-12.59 sreekmatta
 - id not required in Critic table as it is extends Person class
 - updated getters and setters in Artist, Album entity (reason: pointing to stale getters and setters)
