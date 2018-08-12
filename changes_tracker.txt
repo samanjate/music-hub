@@ -3,3 +3,6 @@
 Date: 8/11-12.59 sreekmatta
 - id not required in Critic table as it is extends Person class
 - updated getters and setters in Artist, Album entity (reason: pointing to stale getters and setters)
+
+Date: 8/12-12.59 sreekmatta
+- updated previewUrl to previewURL in Track
