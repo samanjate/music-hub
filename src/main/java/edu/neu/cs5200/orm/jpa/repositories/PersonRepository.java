@@ -11,7 +11,7 @@ import edu.neu.cs5200.orm.jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Integer> {
 	
-	@Query("SELECT p FROM Person p WHERE p.email = :email and p.password = :password")
-	public List<Person> findUserByCredentials(@Param("email") String email, @Param("password") String password);
+	@Query("SELECT p FROM Person p WHERE p.username = :username and p.password = :password")
+	public List<Person> findUserByCredentials(@Param("username") String username, @Param("password") String password);
 
 }

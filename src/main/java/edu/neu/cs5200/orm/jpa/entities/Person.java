@@ -33,11 +33,12 @@ public class Person implements Serializable {
 	private String lastName;
 	
 	@Column(unique=true)
-	private String email;
+	private String username;
 	private String password;
 
 	@Lob
 	private String selfBio;
+	private String email;
 
 	@OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -121,6 +122,14 @@ public class Person implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

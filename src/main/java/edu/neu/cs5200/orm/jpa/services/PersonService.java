@@ -55,9 +55,9 @@ public class PersonService {
 	}
 
 	@GetMapping("/api/login")
-	public ResponseEntity<HttpStatus> findUserByCredentials(@RequestParam("email") String email,
+	public ResponseEntity<HttpStatus> findUserByCredentials(@RequestParam("username") String username,
 			@RequestParam("password") String password, HttpSession session) {
-		List<Person> persons = personRepository.findUserByCredentials(email, password);
+		List<Person> persons = personRepository.findUserByCredentials(username, password);
 		if (persons.isEmpty()) {
 			return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 		}

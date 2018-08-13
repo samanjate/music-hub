@@ -96,6 +96,7 @@ public class Artist extends Person implements Serializable {
 	public Artist(Person p) {
 		this.setFirstName(p.getFirstName());
 		this.setLastName(p.getLastName());
+		this.setUsername(p.getUsername());
 		this.setEmail(p.getEmail());
 		this.setPassword(p.getPassword());
 	}
