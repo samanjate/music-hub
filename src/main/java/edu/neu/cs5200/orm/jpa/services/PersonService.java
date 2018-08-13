@@ -75,5 +75,12 @@ public class PersonService {
 		} else
 			return null;
 	}
+	
+	@GetMapping("/api/logout")
+	public ResponseEntity<HttpStatus> logout(HttpSession session) {
+		session.setAttribute(SESSION_USER, null);
+		currentSession = null;
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
 
 }
