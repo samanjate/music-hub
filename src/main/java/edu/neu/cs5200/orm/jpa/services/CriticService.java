@@ -51,10 +51,16 @@ public class CriticService {
 	}
 	
 	@PutMapping("/api/critic/{cid}")
-	public Critic updateCritic(@RequestBody Critic critic, HttpSession session) {
-		Critic updatedCritic = criticRepository.save(critic);
-		sessionManager.setSession(session, updatedCritic);
-		return updatedCritic;
+	public Critic updateCritic(@RequestBody Critic critic,@PathVariable("cid") int cid, HttpSession session) {
+		Optional<Critic> oCritic = criticRepository.findById(cid);
+		if(oCritic.isPresent()) {
+			critic.setId(oCritic.get().getId());
+			Critic updatedCritic = criticRepository.save(critic);
+			sessionManager.setSession(session, updatedCritic);
+			return updatedCritic;
+		} else {
+			return null;
+		}
 	}
 	
 	@DeleteMapping("/api/critic/{cid}")

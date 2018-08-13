@@ -51,10 +51,16 @@ public class ArtistService {
 	}
 	
 	@PutMapping("/api/artist/{aid}")
-	public Artist updateArtist(@RequestBody Artist artist, HttpSession session) {
-		Artist updatedArtist = artistRepository.save(artist);
-		sessionManager.setSession(session, updatedArtist);
-		return updatedArtist;
+	public Artist updateArtist(@RequestBody Artist artist, @PathVariable("aid") int aid, HttpSession session) {
+		Optional<Artist> oArtist = artistRepository.findById(aid);
+		if(oArtist.isPresent()) {
+			artist.setId(oArtist.get().getId());
+			Artist updatedArtist = artistRepository.save(artist);
+			sessionManager.setSession(session, updatedArtist);
+			return updatedArtist;
+		} else {
+			return null;
+		}
 	}
 	
 	@DeleteMapping("/api/artist/{aid}")
