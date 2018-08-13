@@ -20,6 +20,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Critic extends Person implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	
+	public Critic() {
+		
+	}
+	
+	public Critic(Person p) {
+		this.setFirstName(p.getFirstName());
+		this.setLastName(p.getLastName());
+		this.setUsername(p.getUsername());
+		this.setEmail(p.getEmail());
+		this.setPassword(p.getPassword());
+	}
 		
 	@OneToMany(mappedBy = "critic")
 	private List<Rating> ratings;

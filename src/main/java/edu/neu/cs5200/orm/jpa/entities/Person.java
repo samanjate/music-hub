@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "DTYPE")
+@DiscriminatorColumn(name = "dType")
 public class Person implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -28,6 +28,9 @@ public class Person implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Column(insertable = false, updatable = false) 
+	private String dType;
 
 	private String firstName;
 	private String lastName;
@@ -64,6 +67,14 @@ public class Person implements Serializable {
 		this.id = id;
 	}
 
+	public String getdType() {
+		return dType;
+	}
+
+	public void setdType(String dType) {
+		this.dType = dType;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
