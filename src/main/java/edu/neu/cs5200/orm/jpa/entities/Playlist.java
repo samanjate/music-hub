@@ -35,21 +35,17 @@ public class Playlist implements Serializable {
 
 	private String name;
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastModifiedDate;
+	private Date modified;
 	private int trackCount;
-	
+
 	private Privacy privacy;
-	
+
 	@Lob
 	private String description;
 	private Boolean freePlayCompliant;
-	
+
 	@ManyToMany
-	@JoinTable(name="PLAYLIST2TRACK", 
-	joinColumns=@JoinColumn(name="PLAYLIST_ID", 
-	referencedColumnName="ID"),
-	inverseJoinColumns=@JoinColumn(name="TRACK_ID", 
-	referencedColumnName="ID"))
+	@JoinTable(name = "PLAYLIST2TRACK", joinColumns = @JoinColumn(name = "PLAYLIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "TRACK_ID", referencedColumnName = "ID"))
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JsonIgnore
 	private List<Track> tracks;
@@ -82,12 +78,12 @@ public class Playlist implements Serializable {
 		this.name = name;
 	}
 
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
+	public Date getModified() {
+		return modified;
 	}
 
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
+	public void setModified(Date modified) {
+		this.modified = modified;
 	}
 
 	public int getTrackCount() {
