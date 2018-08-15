@@ -40,7 +40,8 @@ public class Track implements Serializable {
 	private List<Album> albums;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@JsonIgnore
 	private Artist artist;
 
 	@ManyToMany
