@@ -33,9 +33,9 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
  */
 
 public class S3Connection {
-
+	
 	private static final String SUFFIX = "/";
-	public static final String AWS_BUCKET_URL = "https://s3.console.aws.amazon.com/s3/object/music-hub-app/";
+	public static final String AWS_BUCKET_URL = "https://s3.amazonaws.com/music-hub-app/";
 	private static final String FILE_SEPERATOR = "\\";
 
 	private static final String ACCESSKEYID = System.getenv("ACCESS_KEY_ID");

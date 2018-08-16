@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.neu.cs5200.aws.S3Connection;
+import edu.neu.cs5200.orm.jpa.entities.Artist;
 import edu.neu.cs5200.orm.jpa.entities.Track;
 import edu.neu.cs5200.orm.jpa.repositories.ArtistRepository;
 import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
@@ -46,7 +47,7 @@ public class TrackService {
 			S3Connection.getInstance()
 					.uploadFilesInFolder( loggedInUserId + "/" + createdTrack.getId(), file);
 			
-			createdTrack.setPreviewURL(S3Connection.AWS_BUCKET_URL + loggedInUserId + "/" + createdTrack.getId()+"/" + file.getOriginalFilename() +".mp3");
+			createdTrack.setPreviewURL(S3Connection.AWS_BUCKET_URL + loggedInUserId + "/" + createdTrack.getId()+"/" + file.getOriginalFilename());
 			trackRepository.save(createdTrack);
 			message = "You successfully uploaded " + file.getOriginalFilename() + "!";
 			return ResponseEntity.status(HttpStatus.OK).body(message);
@@ -59,5 +60,12 @@ public class TrackService {
 	@GetMapping("/api/track/{name}")
 	public List<Track> findTracksByName(@PathVariable("name") String name) {
 		return trackRepository.findTracksByName("%" + name + "%");
+	}
+	
+	@GetMapping("/api/track/artist/{artistId}")
+	public List<Track> findTracksByArtistId(@PathVariable("artistId") int artistId) {
+		Artist a = new Artist();
+		a.setId(artistId);
+		return trackRepository.findTracksByArtistId(a);
 	}
 }
