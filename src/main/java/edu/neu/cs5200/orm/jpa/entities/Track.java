@@ -32,7 +32,6 @@ public class Track implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(unique=true, nullable=true)
 	private long napsterTrackId;
 
 	private String name;

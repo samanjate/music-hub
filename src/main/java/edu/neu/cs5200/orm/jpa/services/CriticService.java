@@ -71,13 +71,10 @@ public class CriticService {
 		sessionManager.clearSession(session);
 	}
 	
-	@PostMapping("/api/critic/like/{tid}")
-	public ResponseEntity<HttpStatus> likeTrack(@RequestBody Critic critic, @PathVariable("tid") String tid, HttpSession session) {
-		System.out.println("Critic " + critic.getId() + " likes " + tid);
-		System.out.flush();
+	@PostMapping("/api/critic/like")
+	public ResponseEntity<HttpStatus> likeTrack(@RequestBody Critic critic, HttpSession session) {
 		Person person = sessionManager.checkSession();
 		if(person != null && person.getId() == critic.getId() && critic.getdType().equals("CRITIC")) {
-			System.out.println("Critic " + critic.getId() + " likes " + tid);
 			return ResponseEntity.ok(HttpStatus.OK);
 		} else {
 			sessionManager.clearSession(session);
