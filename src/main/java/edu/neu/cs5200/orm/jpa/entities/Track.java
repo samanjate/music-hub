@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,6 +31,9 @@ public class Track implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Column(unique=true, nullable=true)
+	private long napsterTrackId;
 
 	private String name;
 	private int playbackSeconds;
@@ -146,5 +150,13 @@ public class Track implements Serializable {
 
 	public void setLikers(List<Critic> likers) {
 		this.likers = likers;
+	}
+	
+	public long getNapsterTrackId() {
+		return napsterTrackId;
+	}
+
+	public void setNapsterTrackId(long napsterTrackId) {
+		this.napsterTrackId = napsterTrackId;
 	}
 }

@@ -1,6 +1,7 @@
 package edu.neu.cs5200.orm.jpa.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,6 +56,15 @@ public class TrackService {
 			message = "FAIL to upload " + file.getOriginalFilename() + "!";
 			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
 		}
+	}
+	
+	@GetMapping("/api/track/{tid}")
+	public Track findTrackById(@PathVariable("tid") int id) {
+		Optional<Track> oTrack = trackRepository.findById(id);
+		if(oTrack.isPresent()) {
+			return oTrack.get();
+		}
+		return null;
 	}
 
 	@GetMapping("/api/track/{name}")

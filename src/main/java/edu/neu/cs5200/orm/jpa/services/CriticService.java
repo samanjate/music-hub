@@ -6,6 +6,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +53,7 @@ public class CriticService {
 	}
 	
 	@PutMapping("/api/critic/{cid}")
-	public Critic updateCritic(@RequestBody Critic critic,@PathVariable("cid") int cid, HttpSession session) {
+	public Critic updateCritic(@RequestBody Critic critic, @PathVariable("cid") int cid, HttpSession session) {
 		Optional<Critic> oCritic = criticRepository.findById(cid);
 		if(oCritic.isPresent()) {
 			critic.setId(oCritic.get().getId());
@@ -64,9 +66,23 @@ public class CriticService {
 	}
 	
 	@DeleteMapping("/api/critic/{cid}")
-	public void deleteCriticById(@RequestBody Critic critic, @PathVariable("cid") int cid, HttpSession session) {
+	public void deleteCriticById(@PathVariable("cid") int cid, @RequestBody Critic critic, HttpSession session) {
 		criticRepository.deleteById(cid);
 		sessionManager.clearSession(session);
+	}
+	
+	@PostMapping("/api/critic/like/{tid}")
+	public ResponseEntity<HttpStatus> likeTrack(@RequestBody Critic critic, @PathVariable("tid") String tid, HttpSession session) {
+		System.out.println("Critic " + critic.getId() + " likes " + tid);
+		System.out.flush();
+		Person person = sessionManager.checkSession();
+		if(person != null && person.getId() == critic.getId() && critic.getdType().equals("CRITIC")) {
+			System.out.println("Critic " + critic.getId() + " likes " + tid);
+			return ResponseEntity.ok(HttpStatus.OK);
+		} else {
+			sessionManager.clearSession(session);
+			return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }
