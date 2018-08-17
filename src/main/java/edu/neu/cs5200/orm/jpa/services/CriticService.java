@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.neu.cs5200.orm.jpa.entities.Critic;
 import edu.neu.cs5200.orm.jpa.entities.Person;
+import edu.neu.cs5200.orm.jpa.entities.Rating;
 import edu.neu.cs5200.orm.jpa.entities.Track;
 import edu.neu.cs5200.orm.jpa.repositories.CriticRepository;
 import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
@@ -161,6 +162,43 @@ public class CriticService {
 			sessionManager.clearSession(session);
 		}
 		return false;
+	}
+	
+	@GetMapping("/api/critic/rate/{tid}") 
+	public Rating rateStatus(@PathVariable("tid") long tid, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			if(oCritic.isPresent()) {
+				for(Rating r : oCritic.get().getRatings()) {
+					if(r.getTrack().getId() == (int) tid 
+							|| r.getTrack().getNapsterId() == tid) {
+						return r;
+					}
+				}
+			}
+		} else {
+			sessionManager.clearSession(session);
+		}
+		return null;
+	}
+	
+	@PutMapping("/api/critic/rate/{tid}")
+	public Rating updateRating(@PathVariable("tid") long tid, @RequestBody int rating, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			for(Rating r : oCritic.get().getRatings()) {
+				if(r.getTrack().getId() == (int) tid 
+						|| r.getTrack().getNapsterId() == tid) {
+					r.setPoints(rating);
+					
+				}
+			}
+		} else {
+			sessionManager.clearSession(session);
+		}
+		return null;
 	}
 
 }
