@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Rating implements Serializable {
 	
@@ -30,11 +32,13 @@ public class Rating implements Serializable {
 	private int points;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
+	@JoinColumn(referencedColumnName = "id", nullable = false, unique = false)
+	@JsonIgnore
 	private Critic critic;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
+	@JoinColumn(referencedColumnName = "id", nullable = false, unique = false)
+	@JsonIgnore
 	private Track track;
 
 	public int getId() {

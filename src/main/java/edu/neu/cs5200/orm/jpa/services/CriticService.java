@@ -23,6 +23,7 @@ import edu.neu.cs5200.orm.jpa.entities.Person;
 import edu.neu.cs5200.orm.jpa.entities.Rating;
 import edu.neu.cs5200.orm.jpa.entities.Track;
 import edu.neu.cs5200.orm.jpa.repositories.CriticRepository;
+import edu.neu.cs5200.orm.jpa.repositories.RatingRepository;
 import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
 
 @RestController
@@ -34,6 +35,9 @@ public class CriticService {
 	
 	@Autowired
 	TrackRepository trackRepository;
+	
+	@Autowired
+	RatingRepository ratingRepository;
 	
 	Session sessionManager = Session.getInstance();
 	
@@ -183,22 +187,58 @@ public class CriticService {
 		return null;
 	}
 	
-	@PutMapping("/api/critic/rate/{tid}")
-	public Rating updateRating(@PathVariable("tid") long tid, @RequestBody int rating, HttpSession session) {
+	@PostMapping("/api/critic/rate/{rating}")
+	public ResponseEntity<HttpStatus> createRating(@PathVariable("rating") int rating, @RequestBody Track track, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Track> oTrack = trackRepository.findById(track.getId());
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			List<Track> tracks = trackRepository.findTracksByNapsterId(track.getId());
+			if(oCritic.isPresent()) {
+				Critic critic = oCritic.get(); 
+				Track t = null;
+				if(oTrack.isPresent()) {
+					t = oTrack.get();
+				} else if(!tracks.isEmpty()) {
+					t = tracks.get(0);
+				} else {
+					t = new Track();
+					t.setNapsterId(track.getId());
+					t.setName(track.getName());
+					t.setPlaybackSeconds(track.getPlaybackSeconds());
+					t.setPreviewURL(track.getPreviewURL());
+					t.setArtist(null);
+					trackRepository.save(t);
+				}
+				Rating newRatings = new Rating(critic, t, rating);
+				ratingRepository.save(newRatings);
+				return ResponseEntity.ok(HttpStatus.OK);
+			}
+		} else {
+			sessionManager.clearSession(session);
+		}
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+	}
+	
+	@PutMapping("/api/critic/rate/{rating}")
+	public ResponseEntity<HttpStatus> updateRating(@PathVariable("rating") int rating, @RequestBody Track track, HttpSession session) {
 		Person person = sessionManager.checkSession();
 		if(person != null) {
 			Optional<Critic> oCritic = criticRepository.findById(person.getId());
-			for(Rating r : oCritic.get().getRatings()) {
-				if(r.getTrack().getId() == (int) tid 
-						|| r.getTrack().getNapsterId() == tid) {
-					r.setPoints(rating);
-					
+			if(oCritic.isPresent()) {
+				for(Rating r : oCritic.get().getRatings()) {
+					if(r.getTrack().getId() == track.getId()
+							|| r.getTrack().getNapsterId() == track.getId()) {
+						r.setPoints(rating);
+						ratingRepository.save(r);
+						return ResponseEntity.ok(HttpStatus.OK);
+					}
 				}
 			}
 		} else {
 			sessionManager.clearSession(session);
 		}
-		return null;
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 	}
 
 }
