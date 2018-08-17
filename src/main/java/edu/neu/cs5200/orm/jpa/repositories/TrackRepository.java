@@ -15,4 +15,7 @@ public interface TrackRepository extends CrudRepository<Track, Integer> {
 
 	@Query("SELECT t FROM Track t WHERE t.artist = :artistId")
 	public List<Track> findTracksByArtistId(@Param("artistId") Artist artist);
+	
+	@Query("SELECT t FROM Track t WHERE t.napsterId = :napsterId")
+	public List<Track> findTracksByNapsterId(@Param("napsterId") long id);
 }

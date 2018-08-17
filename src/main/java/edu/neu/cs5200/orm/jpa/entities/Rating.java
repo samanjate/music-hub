@@ -15,6 +15,14 @@ public class Rating implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public Rating() {}
+	
+	public Rating(Critic critic, Track track, int points) {
+		setCritic(critic);
+		setTrack(track);
+		setPoints(points);
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
