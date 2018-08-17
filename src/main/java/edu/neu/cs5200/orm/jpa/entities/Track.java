@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -43,7 +42,7 @@ public class Track implements Serializable {
 	private List<Album> albums;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@JoinColumn(referencedColumnName = "id", nullable = true)
 	@JsonIgnore
 	private Artist artist;
 
