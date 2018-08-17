@@ -1,5 +1,6 @@
 package edu.neu.cs5200.orm.jpa.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,23 +77,36 @@ public class CriticService {
 		sessionManager.clearSession(session);
 	}
 	
-	@PostMapping("/api/critic/like")
-	public ResponseEntity<HttpStatus> likeTrack(@RequestBody Track track, HttpSession session) {
+	@PostMapping("/api/critic/like/{tid}")
+	public ResponseEntity<HttpStatus> likeTrack(@RequestBody Track track, @PathVariable("tid") long tid, HttpSession session) {
 		Person person = sessionManager.checkSession();
 		if(person != null) {
 			Optional<Track> oTrack = trackRepository.findById(track.getId());
 			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			List<Track> tracks = trackRepository.findTracksByNapsterId(tid);
 			if(oCritic.isPresent()) {
 				Critic critic = oCritic.get(); 
 				if(oTrack.isPresent()) {
 					for(Track t : critic.getLikes()) {
-						if(t.getId() == oTrack.get().getId()) {
+						if(t.getId() == oTrack.get().getId() || t.getNapsterId() == tid) {
 							return ResponseEntity.ok(HttpStatus.ALREADY_REPORTED);
 						}
 					}
+					oTrack.get().getLikers().add(critic);
 					critic.getLikes().add(oTrack.get());
+				} else if(!tracks.isEmpty()) {
+					for(Critic c : tracks.get(0).getLikers()) {
+						if(c.getId() == critic.getId()) {
+							return ResponseEntity.ok(HttpStatus.ALREADY_REPORTED);
+						}
+					}
+					tracks.get(0).getLikers().add(critic);
+					critic.getLikes().add(tracks.get(0));
 				} else {
-					trackRepository.save(track);
+					track.setNapsterId(tid);
+					List<Critic> likers = new ArrayList<Critic>();
+					likers.add(critic);
+					track.setLikers(likers);
 					critic.getLikes().add(track);
 				}
 				criticRepository.save(critic);
@@ -104,20 +118,43 @@ public class CriticService {
 		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 	}
 	
-	@GetMapping("/api/critic/like/{tid}") 
-	public Boolean likeStatus(@PathVariable("tid") int tid, HttpSession session) {
+	@DeleteMapping("/api/critic/unlike/{tid}")
+	public ResponseEntity<HttpStatus> unlikeTrack(@PathVariable("tid") long tid, HttpSession session) {
 		Person person = sessionManager.checkSession();
 		if(person != null) {
-			Optional<Track> oTrack = trackRepository.findById(tid);
+			Optional<Track> oTrack = trackRepository.findById((int) tid);
 			Optional<Critic> oCritic = criticRepository.findById(person.getId());
-			if(oCritic.isPresent() && oTrack.isPresent()) {
+			List<Track> tracks = trackRepository.findTracksByNapsterId(tid);
+			if(oCritic.isPresent()) {
+				Critic critic = oCritic.get(); 
+				if(oTrack.isPresent()) {
+					critic.getLikes().remove(oTrack.get());
+					oTrack.get().getLikers().remove(critic);
+				} 
+				if(!tracks.isEmpty()) {
+					critic.getLikes().remove(tracks.get(0));
+					tracks.get(0).getLikers().remove(critic);
+				}
+				criticRepository.save(critic);
+				return ResponseEntity.ok(HttpStatus.OK);
+			}
+		} else {
+			sessionManager.clearSession(session);
+		}
+		return ResponseEntity.ok(HttpStatus.ALREADY_REPORTED);
+	}
+	
+	@GetMapping("/api/critic/like/{tid}") 
+	public Boolean likeStatus(@PathVariable("tid") long tid, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			if(oCritic.isPresent()) {
 				for(Track t : oCritic.get().getLikes()) {
-					if(t.getId() == tid) {
-						System.out.println("found");
+					if(t.getId() == (int) tid || t.getNapsterId() == tid) {
 						return true;
 					}
 				}
-				System.out.println("not found");
 				return false;
 			}
 		} else {

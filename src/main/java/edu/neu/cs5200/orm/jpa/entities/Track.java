@@ -33,6 +33,8 @@ public class Track implements Serializable {
 
 	private String name;
 	private int playbackSeconds;
+	
+	private long napsterId;
 
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "tracks", cascade = CascadeType.ALL)
 	@Fetch(value = FetchMode.SUBSELECT)
@@ -88,6 +90,14 @@ public class Track implements Serializable {
 
 	public void setPlaybackSeconds(int playbackSeconds) {
 		this.playbackSeconds = playbackSeconds;
+	}
+	
+	public long getNapsterId() {
+		return napsterId;
+	}
+
+	public void setNapsterId(long napsterId) {
+		this.napsterId = napsterId;
 	}
 
 	public List<Album> getAlbums() {
