@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,8 +30,6 @@ public class Track implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	private long napsterTrackId;
 
 	private String name;
 	private int playbackSeconds;
@@ -43,7 +40,7 @@ public class Track implements Serializable {
 	private List<Album> albums;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@JoinColumn(referencedColumnName = "id")
 	@JsonIgnore
 	private Artist artist;
 
@@ -149,13 +146,5 @@ public class Track implements Serializable {
 
 	public void setLikers(List<Critic> likers) {
 		this.likers = likers;
-	}
-	
-	public long getNapsterTrackId() {
-		return napsterTrackId;
-	}
-
-	public void setNapsterTrackId(long napsterTrackId) {
-		this.napsterTrackId = napsterTrackId;
 	}
 }
