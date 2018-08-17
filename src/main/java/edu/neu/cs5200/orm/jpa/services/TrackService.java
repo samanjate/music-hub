@@ -58,7 +58,7 @@ public class TrackService {
 		}
 	}
 	
-	@GetMapping("/api/track/{tid}")
+	@GetMapping("/api/track/id/{tid}")
 	public Track findTrackById(@PathVariable("tid") int id) {
 		Optional<Track> oTrack = trackRepository.findById(id);
 		if(oTrack.isPresent()) {
