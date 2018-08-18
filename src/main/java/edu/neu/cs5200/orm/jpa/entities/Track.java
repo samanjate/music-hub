@@ -20,6 +20,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,6 +38,7 @@ public class Track implements Serializable {
 	private int playbackSeconds;
 	
 	@Column(nullable=true)
+	@NotFound(action = NotFoundAction.IGNORE)
 	private long napsterId;
 
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "tracks", cascade = CascadeType.ALL)

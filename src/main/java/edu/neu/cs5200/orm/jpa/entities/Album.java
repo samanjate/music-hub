@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,6 +37,10 @@ public class Album implements Serializable {
 
 	private String name;
 	private String albumLink;
+	
+	@Column(nullable=true)
+	@NotFound(action = NotFoundAction.IGNORE)
+	private long napsterId;
 
 	@ManyToMany
 	@JoinTable(name = "TRACK2ALBUM", joinColumns = @JoinColumn(name = "ARTIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "TRACK_ID", referencedColumnName = "ID"))
@@ -113,5 +120,13 @@ public class Album implements Serializable {
 
 	public void setArtists(List<Artist> artists) {
 		this.artists = artists;
+	}
+	
+	public long getNapsterId() {
+		return napsterId;
+	}
+
+	public void setNapsterId(long napsterId) {
+		this.napsterId = napsterId;
 	}
 }
