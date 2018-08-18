@@ -31,7 +31,7 @@ public class Playlist implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
+	
 	private String name;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
@@ -46,7 +46,6 @@ public class Playlist implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "PLAYLIST2TRACK", joinColumns = @JoinColumn(name = "PLAYLIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "TRACK_ID", referencedColumnName = "ID"))
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JsonIgnore
 	private List<Track> tracks;
 
 	@ManyToOne

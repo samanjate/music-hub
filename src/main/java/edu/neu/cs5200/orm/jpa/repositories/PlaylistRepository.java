@@ -1,6 +1,7 @@
 package edu.neu.cs5200.orm.jpa.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -15,4 +16,7 @@ public interface PlaylistRepository extends CrudRepository<Playlist, Integer> {
 
 	@Query("SELECT p FROM Playlist p WHERE p.createdBy = :personId")
 	public List<Playlist> findPlaylistsByPersonId(@Param("personId") Person person);
+
+//	@Query("SELECT p FROM Playlist p WHERE p.napsterId = :playlistId")
+//	public Optional<Playlist> findByNapsterId(@Param("playlistId")long playlistId);
 }
