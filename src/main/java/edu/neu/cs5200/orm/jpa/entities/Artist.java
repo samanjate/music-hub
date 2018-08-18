@@ -3,6 +3,7 @@ package edu.neu.cs5200.orm.jpa.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -12,6 +13,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,6 +29,10 @@ public class Artist extends Person implements Serializable {
 
 	@OneToMany(mappedBy = "artist")
 	private List<Biodata> bios;
+	
+	@Column(nullable=true)
+	@NotFound(action = NotFoundAction.IGNORE)
+	private long napsterId;
 
 	@ManyToMany
 	@JoinTable(name = "ALBUM2ARTIST", joinColumns = @JoinColumn(name = "ARTIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ALBUM_ID", referencedColumnName = "ID"))
@@ -76,10 +83,16 @@ public class Artist extends Person implements Serializable {
 	public void setTracks(List<Track> tracks) {
 		this.tracks = tracks;
 	}
-
-	public Artist() {
-
+	
+	public long getNapsterId() {
+		return napsterId;
 	}
+
+	public void setNapsterId(long napsterId) {
+		this.napsterId = napsterId;
+	}
+
+	public Artist() {}
 
 	public Artist(Person p) {
 		this.setFirstName(p.getFirstName());
