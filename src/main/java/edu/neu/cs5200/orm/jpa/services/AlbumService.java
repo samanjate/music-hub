@@ -1,6 +1,7 @@
 package edu.neu.cs5200.orm.jpa.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +27,15 @@ public class AlbumService {
 	@GetMapping("/api/album/artist/{artistId}")
 	public List<Album> findAlbumsByArtistId(@PathVariable("artistId") int artistId) {
 		return artistRepository.findAlbumsByArtistId(artistId);
+	}
+	
+	@GetMapping("/api/album/{aid}")
+	public Album findAlbumById(@PathVariable("aid") int aid) {
+		Optional<Album> oAlbum = albumRepository.findById(aid);
+		if(oAlbum.isPresent()) {
+			return oAlbum.get();
+		}
+		return null;
 	}
 	
 }
