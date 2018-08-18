@@ -3,7 +3,6 @@ package edu.neu.cs5200.orm.jpa.entities;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -11,10 +10,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,8 +28,7 @@ public class Artist extends Person implements Serializable {
 	@OneToMany(mappedBy = "artist")
 	private List<Biodata> bios;
 	
-	@Column(nullable=true)
-	@NotFound(action = NotFoundAction.IGNORE)
+	@ColumnDefault("-1")
 	private long napsterId;
 
 	@ManyToMany
