@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,10 +49,13 @@ public class Playlist implements Serializable {
 	@JsonIgnore
 	private List<Track> tracks;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
+	@JsonIgnore
 	private Person createdBy;
 
+	private String imageURL;
+	
 	public Person getCreatedBy() {
 		return createdBy;
 	}
@@ -124,6 +126,14 @@ public class Playlist implements Serializable {
 
 	public void setTracks(List<Track> tracks) {
 		this.tracks = tracks;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 
 }
