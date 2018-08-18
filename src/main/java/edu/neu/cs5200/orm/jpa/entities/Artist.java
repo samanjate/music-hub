@@ -34,6 +34,7 @@ public class Artist extends Person implements Serializable {
 	private List<Album> albums;
 
 	@OneToMany(mappedBy = "artist")
+	@JsonIgnore
 	private List<Track> tracks;
 
 	@OneToMany(mappedBy = "artist")
