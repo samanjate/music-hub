@@ -4,21 +4,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NotFound;
@@ -37,6 +34,7 @@ public class Album implements Serializable {
 
 	private String name;
 	private String albumLink;
+	private String imageURL;
 	
 	@Column(nullable=true)
 	@NotFound(action = NotFoundAction.IGNORE)
@@ -53,10 +51,9 @@ public class Album implements Serializable {
 	private String copyright;
 	private String accountPartner;
 
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "albums", cascade = CascadeType.ALL)
-	@Fetch(value = FetchMode.SUBSELECT)
-	@JsonIgnore
-	private List<Artist> artists;
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id", nullable = true)
+	private Artist artist;
 
 	public int getId() {
 		return id;
@@ -113,15 +110,15 @@ public class Album implements Serializable {
 	public void setAccountPartner(String accountPartner) {
 		this.accountPartner = accountPartner;
 	}
-
-	public List<Artist> getArtists() {
-		return artists;
-	}
-
-	public void setArtists(List<Artist> artists) {
-		this.artists = artists;
-	}
 	
+	public Artist getArtist() {
+		return artist;
+	}
+
+	public void setArtist(Artist artist) {
+		this.artist = artist;
+	}
+
 	public long getNapsterId() {
 		return napsterId;
 	}
@@ -129,4 +126,13 @@ public class Album implements Serializable {
 	public void setNapsterId(long napsterId) {
 		this.napsterId = napsterId;
 	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+	
 }
