@@ -1,5 +1,6 @@
 package edu.neu.cs5200.orm.jpa.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.neu.cs5200.aws.S3Connection;
+import edu.neu.cs5200.orm.jpa.entities.Album;
 import edu.neu.cs5200.orm.jpa.entities.Artist;
 import edu.neu.cs5200.orm.jpa.entities.Track;
+import edu.neu.cs5200.orm.jpa.repositories.AlbumRepository;
 import edu.neu.cs5200.orm.jpa.repositories.ArtistRepository;
 import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
 
@@ -32,19 +35,46 @@ public class TrackService {
 	@Autowired
 	ArtistRepository artistRepository;
 
+	@Autowired
+	AlbumRepository albumRepository;
 	
 	Session sessionManager = Session.getInstance();
 
 	@PostMapping("/create/track")
 	public ResponseEntity<String> createTrack(@RequestParam("file") MultipartFile file,
-			@RequestParam("track") String track) {
+			@RequestParam("track") String track, @RequestParam("album") String album) {
 		String message = "";
 		try {
 			int loggedInUserId = sessionManager.checkSession().getId();
 			ObjectMapper mapper = new ObjectMapper();
-			Track obj = mapper.readValue(track, Track.class);
-			obj.setArtist(artistRepository.findById(loggedInUserId).get());
-			Track createdTrack = trackRepository.save(obj);
+			Track objTrack = mapper.readValue(track, Track.class);
+			Album objAlbum = mapper.readValue(album, Album.class);
+			Artist createdByArtist = artistRepository.findById(loggedInUserId).get();
+			Optional<Album> optionalAlbum = albumRepository.findById(objAlbum.getId());
+			if(optionalAlbum.isPresent()) {
+				objAlbum = optionalAlbum.get();
+			} else {
+				objAlbum = albumRepository.save(objAlbum);
+			}
+			List<Album> albumsTrackPresent = new ArrayList<>(); 
+			albumsTrackPresent.add(objAlbum);
+			objTrack.setAlbums(albumsTrackPresent);
+			objTrack.setArtist(createdByArtist);
+			Track createdTrack = trackRepository.save(objTrack);
+			
+			//once the track is created, save the track in album too
+			List<Track> newTracksList;
+			if(objAlbum.getTracks()==null) {
+				newTracksList = new ArrayList<>();
+				newTracksList.add(createdTrack);
+			}else {
+				newTracksList = objAlbum.getTracks();
+				newTracksList.add(createdTrack);	
+			}
+			objAlbum.setArtist(createdByArtist);
+			objAlbum.setTracks(newTracksList);
+			albumRepository.save(objAlbum);
+			
 			S3Connection.getInstance()
 					.uploadFilesInFolder( loggedInUserId + "/" + createdTrack.getId(), file);
 			

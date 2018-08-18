@@ -44,7 +44,6 @@ public class Album implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "TRACK2ALBUM", joinColumns = @JoinColumn(name = "ARTIST_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "TRACK_ID", referencedColumnName = "ID"))
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@JsonIgnore
 	private List<Track> tracks;
 
 	@Temporal(TemporalType.TIMESTAMP)
