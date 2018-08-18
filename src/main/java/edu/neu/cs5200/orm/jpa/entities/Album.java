@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -57,6 +58,9 @@ public class Album implements Serializable {
 	@Fetch(value = FetchMode.SUBSELECT)
 	@JsonIgnore
 	private List<Artist> artists;
+	
+	@OneToMany(mappedBy = "album")
+	private List<Review> reviews;
 
 	public int getId() {
 		return id;
@@ -128,5 +132,13 @@ public class Album implements Serializable {
 
 	public void setNapsterId(long napsterId) {
 		this.napsterId = napsterId;
+	}
+	
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
 	}
 }

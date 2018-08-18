@@ -18,12 +18,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.neu.cs5200.orm.jpa.entities.Album;
 import edu.neu.cs5200.orm.jpa.entities.Critic;
 import edu.neu.cs5200.orm.jpa.entities.Person;
 import edu.neu.cs5200.orm.jpa.entities.Rating;
+import edu.neu.cs5200.orm.jpa.entities.Review;
 import edu.neu.cs5200.orm.jpa.entities.Track;
+import edu.neu.cs5200.orm.jpa.repositories.AlbumRepository;
 import edu.neu.cs5200.orm.jpa.repositories.CriticRepository;
 import edu.neu.cs5200.orm.jpa.repositories.RatingRepository;
+import edu.neu.cs5200.orm.jpa.repositories.ReviewRepository;
 import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
 
 @RestController
@@ -38,6 +42,12 @@ public class CriticService {
 	
 	@Autowired
 	RatingRepository ratingRepository;
+
+	@Autowired
+	AlbumRepository albumRepository;
+	
+	@Autowired
+	ReviewRepository reviewRepository;
 	
 	Session sessionManager = Session.getInstance();
 	
@@ -238,6 +248,111 @@ public class CriticService {
 		} else {
 			sessionManager.clearSession(session);
 		}
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/api/critic/review")
+	public ResponseEntity<HttpStatus> createReview(@RequestBody Album album, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Album> oAlbum = albumRepository.findById(album.getId());
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			List<Album> albums = albumRepository.findAlbumsByNapsterId(album.getId());
+			if(oCritic.isPresent()) {
+				Album alb = null;
+				if(oAlbum.isPresent()) {
+					alb = oAlbum.get();
+				} else if(!albums.isEmpty()) {
+					alb = albums.get(0);
+				} else {
+					alb = new Album();
+					alb.setNapsterId(album.getId());
+					alb.setName(album.getName());
+					alb.setCopyright(album.getCopyright());
+					alb.setAccountPartner(album.getAccountPartner());
+					alb.setReleaseDate(album.getReleaseDate());
+					alb.setAlbumLink(album.getAlbumLink());
+					alb.setReviews(new ArrayList<Review>());
+					albumRepository.save(alb);
+				}
+				reviewRepository.save(new Review(album.getReviews().get(0).getTitle(),
+												album.getReviews().get(0).getText(),
+												oCritic.get(),
+												alb));
+				return ResponseEntity.ok(HttpStatus.OK);
+			}
+		} else {
+			sessionManager.clearSession(session);
+		}
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/api/critic/review/{aid}") 
+	public Review reviewStatus(@PathVariable("aid") long aid, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			if(oCritic.isPresent()) {
+				for(Review r : oCritic.get().getReviews()) {
+					if(r.getAlbum().getId() == (int) aid 
+							|| r.getAlbum().getNapsterId() == aid) {
+						return r;
+					}
+				}
+			}
+		} else {
+			sessionManager.clearSession(session);
+		}
+		return null;
+	}
+	
+	@PutMapping("/api/critic/review")
+	public ResponseEntity<HttpStatus> updateReview(@RequestBody Album album, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Album> oAlbum = albumRepository.findById(album.getId());
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			List<Album> albums = albumRepository.findAlbumsByNapsterId(album.getId());
+			if(oCritic.isPresent()) {
+				Album alb = null;
+				if(oAlbum.isPresent()) {
+					alb = oAlbum.get();
+				} else if(!albums.isEmpty()) {
+					alb = albums.get(0);
+				} else {
+					return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+				}
+				for(Review r : oCritic.get().getReviews()) {
+					if(r.getAlbum().getId() == alb.getId()) {
+						r.setTitle(album.getReviews().get(0).getTitle());
+						r.setText(album.getReviews().get(0).getText());
+						reviewRepository.save(r);
+						return ResponseEntity.ok(HttpStatus.OK);
+					}
+				}
+				return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			sessionManager.clearSession(session);
+		}
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+	}
+	
+	@DeleteMapping("/api/critic/review/{rid}")
+	public ResponseEntity<HttpStatus> deleteReview(@PathVariable("rid") int rid, HttpSession session) {
+		Person person = sessionManager.checkSession();
+		if(person != null) {
+			Optional<Critic> oCritic = criticRepository.findById(person.getId());
+			if(oCritic.isPresent()) {
+				Optional<Review> oReview = reviewRepository.findById(rid);
+				if(oReview.isPresent()) {
+					reviewRepository.delete(oReview.get());
+					return ResponseEntity.ok(HttpStatus.OK);
+				}
+				return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+			}
+		}
+		sessionManager.clearSession(session);
 		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 	}
 

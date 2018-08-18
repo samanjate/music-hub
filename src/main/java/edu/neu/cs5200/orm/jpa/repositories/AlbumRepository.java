@@ -11,5 +11,7 @@ import edu.neu.cs5200.orm.jpa.entities.Album;
 public interface AlbumRepository extends CrudRepository<Album, Integer> {
 	@Query("SELECT a FROM Album a WHERE a.name = :name")
 	public List<Album> findAlbumsByName(@Param("name") String name);
-
+	
+	@Query("SELECT a FROM Album a WHERE a.napsterId = :napsterId")
+	public List<Album> findAlbumsByNapsterId(@Param("napsterId") long id);
 }
