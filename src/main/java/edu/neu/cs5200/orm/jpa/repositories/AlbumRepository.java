@@ -17,5 +17,6 @@ public interface AlbumRepository extends CrudRepository<Album, Integer> {
 	@Query("SELECT a FROM Album a WHERE a.artist like :artist")
 	public List<Album> findAlbumsByArtistId(@Param("artist") Artist artist);
 	
-
+	@Query("SELECT a FROM Album a WHERE a.napsterId = :napsterId")
+	public List<Album> findAlbumsByNapsterId(@Param("napsterId") long id);
 }

@@ -36,11 +36,6 @@ public class Artist extends Person implements Serializable {
 	@OneToMany(mappedBy = "artist")
 	@JsonIgnore
 	private List<Track> tracks;
-
-	@OneToMany(mappedBy = "artist")
-	private List<Review> reviews;
-
-	
 	
 	public String getArtistLink() {
 		return artistLink;
@@ -80,14 +75,6 @@ public class Artist extends Person implements Serializable {
 
 	public void setTracks(List<Track> tracks) {
 		this.tracks = tracks;
-	}
-
-	public List<Review> getReviews() {
-		return reviews;
-	}
-
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
 	}
 
 	public Artist() {

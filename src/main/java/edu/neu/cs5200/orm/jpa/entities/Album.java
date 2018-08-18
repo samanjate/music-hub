@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -54,6 +55,9 @@ public class Album implements Serializable {
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id", nullable = true)
 	private Artist artist;
+
+	@OneToMany(mappedBy = "album")
+	private List<Review> reviews;
 
 	public int getId() {
 		return id;
@@ -126,7 +130,7 @@ public class Album implements Serializable {
 	public void setNapsterId(long napsterId) {
 		this.napsterId = napsterId;
 	}
-
+	
 	public String getImageURL() {
 		return imageURL;
 	}
@@ -134,5 +138,12 @@ public class Album implements Serializable {
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
 	}
-	
+		
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 }
