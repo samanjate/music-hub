@@ -57,7 +57,7 @@ public class PersonService {
 	
 	@GetMapping("/api/person/following/{personId}")
 	public List<Person> findPersonFollowing(@PathVariable int personId) {
-		return null;
+		return personRepository.findUserFollowing(personId);
 	}
 
 	@Deprecated
