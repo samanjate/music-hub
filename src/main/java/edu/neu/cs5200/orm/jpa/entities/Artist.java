@@ -41,6 +41,10 @@ public class Artist extends Person implements Serializable {
 	@JsonIgnore
 	private List<Track> tracks;
 	
+	@OneToMany(mappedBy = "createdInArtistPage")
+	private List<Advertisement> advertisements;
+
+	
 	public String getArtistLink() {
 		return artistLink;
 	}
@@ -87,6 +91,14 @@ public class Artist extends Person implements Serializable {
 
 	public void setNapsterId(long napsterId) {
 		this.napsterId = napsterId;
+	}
+
+	public List<Advertisement> getAdvertisements() {
+		return advertisements;
+	}
+
+	public void setAdvertisements(List<Advertisement> advertisements) {
+		this.advertisements = advertisements;
 	}
 
 	public Artist() {}

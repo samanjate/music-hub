@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Advertisement implements Serializable {
 
@@ -23,6 +25,7 @@ public class Advertisement implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Lob
 	private String imageUrl;
 	private String name;
 	
@@ -33,8 +36,14 @@ public class Advertisement implements Serializable {
 	private Date lastModified;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName = "id", nullable = false, unique = true)
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@JsonIgnore
 	private Advertiser advertiser;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	@JsonIgnore
+	private Artist createdInArtistPage;
 	
 	public int getId() {
 		return id;
@@ -83,5 +92,14 @@ public class Advertisement implements Serializable {
 	public void setAdvertiser(Advertiser advertiser) {
 		this.advertiser = advertiser;
 	}
+
+	public Artist getCreatedInArtistPage() {
+		return createdInArtistPage;
+	}
+
+	public void setCreatedInArtistPage(Artist createdInArtistPage) {
+		this.createdInArtistPage = createdInArtistPage;
+	}
+	
 
 }
