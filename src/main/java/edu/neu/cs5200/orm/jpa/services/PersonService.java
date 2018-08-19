@@ -1,5 +1,6 @@
 package edu.neu.cs5200.orm.jpa.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,16 @@ public class PersonService {
 	@GetMapping("/api/person")
 	public List<Person> findAllPersons() {
 		return (List<Person>) personRepository.findAll();
+	}
+	
+	@GetMapping("/api/person/username/{username}")
+	public List<Person> findPersonByUsername(@PathVariable String username) {
+		return personRepository.findUserByUsername("%"+username+"%");
+	}
+	
+	@GetMapping("/api/person/following/{personId}")
+	public List<Person> findPersonFollowing(@PathVariable int personId) {
+		return null;
 	}
 
 	@Deprecated
@@ -97,5 +108,62 @@ public class PersonService {
 		} else {
 			return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@PostMapping("/api/follow/{personId}")
+	public ResponseEntity<HttpStatus> followPerson(@PathVariable("personId") int personFollowedById, @RequestBody Person person){
+		
+		Person p = personRepository.findById(personFollowedById).get();
+		person = personRepository.findById(person.getId()).get();
+		
+		List<Person> followersList = person.getFollowers();
+		if(followersList==null) {
+			followersList = new ArrayList<>();
+		}
+		followersList.add(p);
+		person.setFollowers(followersList);
+		personRepository.save(person);
+		
+		List<Person> followingList = p.getFollowing();
+		if(followingList==null) {
+			followingList = new ArrayList<>();
+		}
+		followingList.add(person);
+		p.setFollowing(followingList);
+		personRepository.save(p);
+
+		return ResponseEntity.ok(HttpStatus.OK);	
+	}
+	
+	
+	@PostMapping("/api/unfollow/{personId}")
+	public ResponseEntity<HttpStatus> unfollowPerson(@PathVariable("personId") int personUnfollowedById, @RequestBody Person person){
+		
+		Person p = personRepository.findById(personUnfollowedById).get();
+		person = personRepository.findById(person.getId()).get();
+		
+		List<Person> newFollowersList;
+		newFollowersList = person.getFollowers();
+		for(Person pr:newFollowersList) {
+			if(pr.getId() == personUnfollowedById) {
+				newFollowersList.remove(pr);
+				break;
+			}
+		}
+		person.setFollowers(newFollowersList);
+		personRepository.save(person);
+
+		List<Person> newFollowingList;
+		newFollowingList = p.getFollowing();
+		for(Person pr:newFollowingList) {
+			if(pr.getId() == person.getId()) {
+				newFollowingList.remove(pr);
+				break;
+			}
+		}
+		p.setFollowing(newFollowingList);
+		personRepository.save(p);
+		
+		return ResponseEntity.ok(HttpStatus.OK);	
 	}
 }

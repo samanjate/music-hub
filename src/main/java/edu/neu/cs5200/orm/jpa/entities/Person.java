@@ -13,8 +13,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -47,18 +53,18 @@ public class Person implements Serializable {
 	@JsonIgnore
 	private List<Playlist> playlists;
 	
-	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
+
+	@ManyToMany
+	@JoinTable(name = "PERSON2FOLLOWERS", joinColumns = @JoinColumn(name = "ID", referencedColumnName = "ID"))
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Person> followers;
 	
-	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany
+	@JoinTable(name = "PERSON2FOLLOWING", joinColumns = @JoinColumn(name = "ID", referencedColumnName = "ID"))
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JsonIgnore
 	private List<Person> following;
 	
-	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
-	private List<Message> messages;
-
 	public int getId() {
 		return id;
 	}
@@ -150,13 +156,6 @@ public class Person implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	public List<Message> getMessages() {
-		return messages;
-	}
 
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
 
 }

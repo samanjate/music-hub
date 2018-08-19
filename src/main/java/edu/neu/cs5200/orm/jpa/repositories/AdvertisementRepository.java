@@ -16,4 +16,7 @@ public interface AdvertisementRepository extends CrudRepository<Advertisement, I
 	List<Advertisement> findAdvertisementsByNapsterArtistAndAdvertiser(@Param("a") Artist a,
 			@Param("advertiser") Advertiser advertiser);
 
+	@Query("SELECT a FROM Advertisement a WHERE a.advertiser = :advertiser")
+	List<Advertisement> findAdvertisementsByAdvertiser(@Param("advertiser") Advertiser advertiser);
+
 }
