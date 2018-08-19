@@ -39,6 +39,11 @@ public class TrackService {
 	AlbumRepository albumRepository;
 	
 	Session sessionManager = Session.getInstance();
+	
+	@GetMapping("/api/track")
+	public List<Track> findAllTracks() {
+		return (List<Track>) trackRepository.findAll();
+	}
 
 	@PostMapping("/create/track")
 	public ResponseEntity<String> createTrack(@RequestParam("file") MultipartFile file,

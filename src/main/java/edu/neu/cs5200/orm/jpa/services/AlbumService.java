@@ -34,6 +34,11 @@ public class AlbumService {
 	
 	Session sessionManager = Session.getInstance();
 
+	@GetMapping("/api/album")
+	public List<Album> findAllAlbums() {
+		return (List<Album>) albumRepository.findAll();
+	}
+	
 	@GetMapping("/api/album/artist/{artistId}")
 	public List<Album> findAlbumsByArtistId(@PathVariable("artistId") int artistId) {
 		Artist a = new Artist();
