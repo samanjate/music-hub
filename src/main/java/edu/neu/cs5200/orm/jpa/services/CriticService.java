@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.neu.cs5200.orm.jpa.entities.Album;
@@ -136,6 +137,15 @@ public class CriticService {
 		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 	}
 	
+	@GetMapping("/api/critic/like")
+	public List<Track> getLikes(@RequestParam("critic") int criticId, HttpSession session) {
+		Optional<Critic> oCritic = criticRepository.findById(criticId);
+		if(oCritic.isPresent()) {
+			return oCritic.get().getLikes();
+		}
+		return null;
+	}
+	
 	@PostMapping("/api/critic/like/{tid}")
 	public ResponseEntity<HttpStatus> likeTrack(@RequestBody Track track, @PathVariable("tid") long tid, HttpSession session) {
 		Person person = sessionManager.checkSession();
@@ -222,6 +232,15 @@ public class CriticService {
 		return false;
 	}
 	
+	@GetMapping("/api/critic/rate")
+	public List<Rating> getRatings(HttpSession session, @RequestParam("cid") int cid) {
+		Optional<Critic> oCritic = criticRepository.findById(cid);
+		if(oCritic.isPresent()) {
+			return oCritic.get().getRatings();
+		}
+		return null;
+	}
+	
 	@GetMapping("/api/critic/rate/{tid}") 
 	public Rating rateStatus(@PathVariable("tid") long tid, HttpSession session) {
 		Person person = sessionManager.checkSession();
@@ -293,6 +312,15 @@ public class CriticService {
 			sessionManager.clearSession(session);
 		}
 		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/api/critic/review")
+	public List<Review> getReviews(HttpSession session, @RequestParam("cid") int cid) {
+		Optional<Critic> oCritic = criticRepository.findById(cid);
+		if(oCritic.isPresent()) {
+			return oCritic.get().getReviews();
+		}
+		return null;
 	}
 	
 	@PostMapping("/api/critic/review")
