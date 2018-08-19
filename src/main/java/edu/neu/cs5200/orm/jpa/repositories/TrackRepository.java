@@ -10,7 +10,7 @@ import edu.neu.cs5200.orm.jpa.entities.Artist;
 import edu.neu.cs5200.orm.jpa.entities.Track;
 
 public interface TrackRepository extends CrudRepository<Track, Integer> {
-	@Query("SELECT t FROM Track t WHERE t.name = :name")
+	@Query("SELECT t FROM Track t WHERE t.name like :name")
 	public List<Track> findTracksByName(@Param("name") String name);
 
 	@Query("SELECT t FROM Track t WHERE t.artist = :artistId")

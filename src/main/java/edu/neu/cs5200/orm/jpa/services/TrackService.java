@@ -88,6 +88,13 @@ public class TrackService {
 		}
 	}
 	
+	
+	@GetMapping("/api/track/name/{name}")
+	public List<Track> findTracksByAlbumName(@PathVariable("name") String name) {
+		return trackRepository.findTracksByName("%"+name+"%");
+	}
+	
+	
 	@GetMapping("/api/track/id/{tid}")
 	public Track findTrackById(@PathVariable("tid") int id) {
 		Optional<Track> oTrack = trackRepository.findById(id);

@@ -11,7 +11,7 @@ import edu.neu.cs5200.orm.jpa.entities.Artist;
 
 public interface AlbumRepository extends CrudRepository<Album, Integer> {
 	
-	@Query("SELECT a FROM Album a WHERE a.name = :name")
+	@Query("SELECT a FROM Album a WHERE a.name like :name")
 	public List<Album> findAlbumsByName(@Param("name") String name);
 	
 	@Query("SELECT a FROM Album a WHERE a.artist like :artist")

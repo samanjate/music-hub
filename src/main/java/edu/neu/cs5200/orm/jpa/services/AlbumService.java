@@ -41,6 +41,11 @@ public class AlbumService {
 		return albumRepository.findAlbumsByArtistId(a);
 	}
 	
+	@GetMapping("/api/album/name/{name}")
+	public List<Album> findAlbumsByAlbumName(@PathVariable("name") String name) {
+		return albumRepository.findAlbumsByName("%"+name+"%");
+	}
+	
 	@GetMapping("/api/album/{aid}")
 	public Album findAlbumById(@PathVariable("aid") int aid) {
 		Optional<Album> oAlbum = albumRepository.findById(aid);
