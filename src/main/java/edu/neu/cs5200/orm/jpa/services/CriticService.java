@@ -21,11 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.neu.cs5200.orm.jpa.entities.Album;
 import edu.neu.cs5200.orm.jpa.entities.Critic;
 import edu.neu.cs5200.orm.jpa.entities.Person;
+import edu.neu.cs5200.orm.jpa.entities.Playlist;
 import edu.neu.cs5200.orm.jpa.entities.Rating;
 import edu.neu.cs5200.orm.jpa.entities.Review;
 import edu.neu.cs5200.orm.jpa.entities.Track;
 import edu.neu.cs5200.orm.jpa.repositories.AlbumRepository;
 import edu.neu.cs5200.orm.jpa.repositories.CriticRepository;
+import edu.neu.cs5200.orm.jpa.repositories.PersonRepository;
+import edu.neu.cs5200.orm.jpa.repositories.PlaylistRepository;
 import edu.neu.cs5200.orm.jpa.repositories.RatingRepository;
 import edu.neu.cs5200.orm.jpa.repositories.ReviewRepository;
 import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
@@ -36,6 +39,9 @@ public class CriticService {
 	
 	@Autowired
 	CriticRepository criticRepository;
+	
+	@Autowired
+	PersonRepository personRepository;
 	
 	@Autowired
 	TrackRepository trackRepository;
@@ -49,12 +55,17 @@ public class CriticService {
 	@Autowired
 	ReviewRepository reviewRepository;
 	
+	@Autowired
+	PlaylistRepository playlistRepository;
+	
 	Session sessionManager = Session.getInstance();
 	
 	@PostMapping("/api/critic")
 	public Critic createCritic(@RequestBody Person person, HttpSession session) {
 		Critic createdCritic = criticRepository.save(new Critic(person));
-		sessionManager.setSession(session, createdCritic);
+		if(sessionManager.checkSession() == null) {
+			sessionManager.setSession(session, createdCritic);
+		}
 		return createdCritic;
 	}
 	
@@ -79,7 +90,9 @@ public class CriticService {
 		if(oCritic.isPresent()) {
 			critic.setId(oCritic.get().getId());
 			Critic updatedCritic = criticRepository.save(critic);
-			sessionManager.setSession(session, updatedCritic);
+			if(sessionManager.checkSession() == null) {
+				sessionManager.setSession(session, updatedCritic);
+			}
 			return updatedCritic;
 		} else {
 			return null;
@@ -87,9 +100,40 @@ public class CriticService {
 	}
 	
 	@DeleteMapping("/api/critic/{cid}")
-	public void deleteCriticById(@PathVariable("cid") int cid, @RequestBody Critic critic, HttpSession session) {
-		criticRepository.deleteById(cid);
-		sessionManager.clearSession(session);
+	public ResponseEntity<HttpStatus> deleteCriticById(@PathVariable("cid") int cid, HttpSession session) {
+		Optional<Critic> oCritic = criticRepository.findById(cid);
+		if(oCritic.isPresent()) {
+			Critic critic = oCritic.get();
+			List<Review> reviews = critic.getReviews();
+			critic.setReviews(null);
+			for(Review r : reviews) {
+				reviewRepository.delete(r);
+			}
+			List<Rating> ratings = critic.getRatings();
+			critic.setRatings(null);
+			for(Rating r : ratings) {
+				ratingRepository.delete(r);
+			}
+			for(Track t : critic.getLikes()) {
+				t.getLikers().remove(critic);
+				trackRepository.save(t);
+			}
+			critic.setLikes(null);
+			for(Playlist p: critic.getPlaylists()) {
+				playlistRepository.delete(p);
+			}
+			List<Person> people = critic.getFollowers();
+			for(Person p : people) {
+				p.getFollowing().remove(critic);
+				personRepository.save(p);
+			}
+			criticRepository.delete(critic);
+			if(sessionManager.checkSession().getId() == cid) {
+				sessionManager.clearSession(session);
+			}
+			return ResponseEntity.ok(HttpStatus.OK);
+		}
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 	}
 	
 	@PostMapping("/api/critic/like/{tid}")
