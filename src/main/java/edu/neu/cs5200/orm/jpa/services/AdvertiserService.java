@@ -131,7 +131,15 @@ public class AdvertiserService {
 		return advertisementRepository.save(ad);
 	}
 
-	@GetMapping("/api/find/advertisement/{napsterArtistId}/in/napster/artist/{advertiserId}")
+	@GetMapping("/api/advertisement/advertiser/{advertiserId}")
+	public List<Advertisement> findAdvertisementsByNapsterArtist(
+			@PathVariable("advertiserId") int advertiserId) {
+		Advertiser advertiser = new Advertiser();
+		advertiser.setId(advertiserId);
+		return advertisementRepository.findAdvertisementsByAdvertiser(advertiser);
+	}
+	
+	@GetMapping("/api/advertisement/{napsterArtistId}/in/napster/artist/{advertiserId}")
 	public List<Advertisement> findAdvertisementsByNapsterArtist(@PathVariable("napsterArtistId") long napsterArtistId,
 			@PathVariable("advertiserId") int advertiserId) {
 		Artist a = artistRepository.findArtistByNapsterId(napsterArtistId);
