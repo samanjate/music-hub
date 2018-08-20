@@ -1,0 +1,17 @@
+<div class="mh-side-heading-small">YOUR PLAYLISTS</div>
+<ul class="list-group">
+  <li class="list-group-item" style="padding: 5px;margin: 20px" *ngFor="let userPlaylist of playlists">{{userPlaylist.name}}
+    <button type="button" class="btn btn-light" (click)="addTrackToPlaylist(userPlaylist.id)">
+      <i class="fa fa-plus"></i>
+    </button>
+  </li>
+</ul>
+<div class="mh-side-heading-small" *ngIf="person.dType=='ARTIST'">YOUR ALBUMS</div>
+
+<ul class="list-group">
+  <li class="list-group-item" style="padding: 5px;margin: 20px" *ngFor="let userAlbum of albums">{{userAlbum.name}}
+    <button type="button" class="btn btn-light" (click)="addTrackToAlbum(userAlbum.id)">
+      <i class="fa fa-plus"></i>
+    </button>
+  </li>
+</ul>

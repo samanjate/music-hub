@@ -1,0 +1,40 @@
+<form class="">
+  <div class="alert alert-success" role="alert" *ngIf="this.successMsg">
+    {{this.successMsg}}
+  </div>
+  <div *ngIf="currentFileUpload" class="progress" style="margin-bottom: 15px">
+    <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
+         attr.aria-valuenow="{{progress.percentage}}"
+         aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width:progress.percentage+'%'}">
+      {{progress.percentage}}%
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputEmail" class="col-sm-3 col-form-label">Name</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" id="inputEmail" placeholder="track name" [(ngModel)]="track.name"
+             name="trackName">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputEmail" class="col-sm-3 col-form-label">Select Audio file</label>
+    <label class="btn btn-default col-sm-9">
+      <input type="file" class="form-control" (change)="selectFile($event)">
+    </label>
+  </div>
+  <div class="form-group row">
+    <label for="inputAlbumName" class="col-sm-3 col-form-label">Select Album</label>
+    <div class="col-sm-9">
+      <input class="form-control" [(ngModel)]="query" id="inputAlbumName" (keyup)="filterAlbumName(query)" name="albumName">
+      <div class="list-group">
+        <div class="list-group-item" *ngFor="let item of allAlbums" (click)="loadInputAlbumName(item)">{{item.name}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <button class="btn btn-success" style="margin-left: 15px;" [disabled]="!selectedFiles" (click)="upload()">Upload
+    </button>
+  </div>
+</form>
+
+

@@ -1,0 +1,19 @@
+<table style="margin-top: 10px" class="table table-hover" *ngIf="resultSet">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Name</th>
+    <th scope="col">Artist</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let result of resultSet; let i = index" [attr.data-index]="i" >
+    <th scope="row">{{i+1}}</th>
+    <td>{{result.name}}</td>
+    <td *ngIf="result.artist && result.artist.username">{{result.artist.username}} </td>
+    <td *ngIf="!result.artist">(from napster)</td>
+    <td><button *ngIf="!edit" type="button" class="btn btn-danger" (click)="delete(result.id)">Delete</button></td>
+  </tr>
+  </tbody>
+</table>

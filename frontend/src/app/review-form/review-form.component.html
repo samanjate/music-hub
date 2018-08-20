@@ -1,0 +1,25 @@
+<div class="form-group sep">
+  <label for="sub">Subject:</label>
+  <input type="text" [(ngModel)]="title" class="form-control" id="sub">
+  <label for="comment">Your Comments:</label>
+  <textarea class="form-control" style="width: 450px" [(ngModel)]="text" rows="10" id="comment">jj</textarea>
+  <div class="form-group row">
+    <button *ngIf="!reviewed" class="btn btn-success" style="margin-left: 45%; margin-top: 2%"
+            [disabled]="submitted || !title || !text || deleted" (click)="reviewAlbum()">Submit</button>
+    <div style="text-align: center; margin-left: 150px; margin-top: 10px; margin-right: 5px">
+      <button *ngIf="reviewed" class="btn btn-danger"
+              [disabled]="submitted || !title || !text || deleted" (click)="deleteReviewAlbum()">Delete</button>
+      <button *ngIf="reviewed" class="btn btn-info" style="margin-left: 10px"
+              [disabled]="submitted || !title || !text || deleted" (click)="updateReviewAlbum()">Update</button>
+    </div>
+  </div>
+  <div *ngIf="submitted" class="alert alert-success" role="alert">
+    <strong>Done!</strong> Your review for this album has been posted.
+  </div>
+  <div *ngIf="reviewed && !submitted" class="alert alert-info" role="alert">
+    <strong>Already reviewed!</strong> You have already submitted a review for this album.
+  </div>
+  <div *ngIf="deleted" class="alert alert-danger" role="alert">
+    <strong>Done!</strong> You review has been deleted.
+  </div>
+</div>

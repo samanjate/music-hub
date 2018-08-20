@@ -1,0 +1,36 @@
+<div class="row mh-form">
+  <div class="col-2 mh-col-left">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <a class="nav-link active" id="v-pills-tracks-tab" data-toggle="pill" href="#v-pills-tracks" role="tab"
+         aria-controls="v-pills-tracks" aria-selected="true">Tracks</a>
+      <a class="nav-link" id="v-pills-playlists-tab" data-toggle="pill" href="#v-pills-playlists" role="tab"
+         aria-controls="v-pills-playlists" aria-selected="false">Playlists</a>
+      <a class="nav-link" id="v-pills-albums-tab" data-toggle="pill" href="#v-pills-albums" role="tab"
+         aria-controls="v-pills-albums" aria-selected="false">Albums</a>
+      <a class="nav-link" id="v-pills-artists-tab" data-toggle="pill" href="#v-pills-artists" role="tab"
+         aria-controls="v-pills-artists" aria-selected="false">Artists</a>
+      <a class="nav-link" id="v-pills-people-tab" data-toggle="pill" href="#v-pills-people" role="tab"
+         aria-controls="v-pills-people" aria-selected="false">People</a>
+
+    </div>
+  </div>
+  <div class="col-10">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="v-pills-tracks" role="tabpanel" aria-labelledby="v-pills-tracks-tab">
+        <app-results-list *ngIf="tracksResultList" domainObject="track" [resultList]="tracksResultList"></app-results-list>
+      </div>
+      <div class="tab-pane fade" id="v-pills-playlists" role="tabpanel" aria-labelledby="v-pills-playlists-tab">
+        <app-results-list *ngIf="playlistsResultList" domainObject="playlist" [resultList]="playlistsResultList"></app-results-list>
+      </div>
+      <div class="tab-pane fade" id="v-pills-albums" role="tabpanel" aria-labelledby="v-pills-albums-tab">
+        <app-results-list *ngIf="albumsResultList" domainObject="album" [resultList]="albumsResultList"></app-results-list>
+      </div>
+      <div class="tab-pane fade" id="v-pills-artists" role="tabpanel" aria-labelledby="v-pills-artists-tab">
+        <app-results-list *ngIf="artistsResultList" domainObject="artist" [resultList]="artistsResultList"></app-results-list>
+      </div>
+      <div class="tab-pane fade" id="v-pills-people" role="tabpanel" aria-labelledby="v-pills-people-tab">
+        <app-friends *ngIf="peopleResultList" domainObject="people" [resultList]="peopleResultList"></app-friends>
+      </div>
+    </div>
+  </div>
+</div>

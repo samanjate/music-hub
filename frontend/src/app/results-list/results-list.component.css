@@ -1,0 +1,28 @@
+.mh-badge{
+  padding: 5px;
+}
+
+.mh-icon{
+  font-size: 22px;
+}
+
+.mh-banner{
+  position: absolute;
+  margin-left: 90.5%;
+  margin-top: 0px;
+}
+
+div.modal-content{
+  margin-top: 100px !important;
+}
+
+.mh-add-icon{
+  border-radius: 0px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 5px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+

@@ -1,0 +1,56 @@
+<div class="background-image" [ngStyle]="{'background-image': 'url(' + imageURL + ')'}"></div>
+<div class="main__container">
+  <div class="contain__wrapper">
+    <div class="music__wrapper">
+      <div class="left__panel">
+        <div class="cover owl-carousel">
+          <div class="item">
+            <img style="width: 100%" [src]="imageURL"/>
+          </div>
+        </div>
+      </div>
+      <div class="right__panel">
+        <div class="music__info__wrapper">
+          <div class="header">
+            <div class="icon__wrapper">
+              <span class="icon-right"><i class="zmdi zmdi-apps"></i></span>
+              <div class="title owl-carousel">
+                <div class="item">
+                  <div class="song__name" *ngIf="tracksResult">{{tracksResult.name}}</div>
+                  <p class="album__name" *ngIf="tracksResult">{{tracksResult.artistName}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="music__control">
+            <div class="music__button">
+              <div *ngIf="person && person.dType==='CRITIC'">
+                <span (click)="likeTrack()" class="button__prev" *ngIf="!like"><fa-icon [icon]="faThumbsUp"
+                                                                                        class="mh-icon small"></fa-icon></span>
+                <span (click)="unlikeTrack()" class="button__prev_unlike" *ngIf="like"><fa-icon [icon]="faThumbsUp"
+                                                                                                class="mh-icon small"></fa-icon></span>
+                <span class="button__next" (click)="htmlInsideModal.open()"><fa-icon [icon]="faStar" class="mh-icon small"></fa-icon></span>
+              </div>
+              <br/><br/><br/>
+              <audio style="padding-bottom: 20px" class="text-center" controls="controls">
+                <source *ngIf="previewURL" [src]="previewURL" type="audio/mpeg">
+              </audio>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<modal #htmlInsideModal [closeOnOutsideClick]="false">
+  <div>
+    <ng-template #modalBody>
+      <h4 *ngIf="tracksResult"><b>Rate {{tracksResult.name}} by
+        {{tracksResult.artistName}}</b></h4>
+      <app-rate-form  *ngIf="tracksResult" [track]="tracksResult"></app-rate-form>
+      <button type="button" class="btn btn-danger float-right" (click)="htmlInsideModal.close();">Close</button>
+    </ng-template>
+  </div>
+</modal>
+

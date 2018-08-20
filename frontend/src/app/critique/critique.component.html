@@ -1,0 +1,53 @@
+<table *ngIf="domainObject === 'like'" style="margin-top: 10px" class="table table-hover">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Track Name</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let like of likes; let i = index" [attr.data-index]="i">
+    <th scope="row">{{i+1}}</th>
+    <td style="cursor: pointer" (click)="goToTrackPage(like)">{{like.name}}</td>
+  </tr>
+  </tbody>
+</table>
+
+<table *ngIf="domainObject === 'review'" style="margin-top: 10px" class="table table-hover">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Title</th>
+    <th scope="col">Review</th>
+    <th scope="col">Album Name</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let review of reviews; let i = index" [attr.data-index]="i">
+    <th scope="row">{{i+1}}</th>
+    <td>{{review.title}}</td>
+    <td>{{review.text}}</td>
+    <td *ngIf="review.album && review.album.name" style="cursor: pointer" (click)="goToAlbumPage(review.album)">{{review.album.name}}</td>
+  </tr>
+  </tbody>
+</table>
+
+<table *ngIf="domainObject === 'rating'" style="margin-top: 10px" class="table table-hover">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Rating</th>
+    <th scope="col">Track Name</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let rating of ratings; let i = index" [attr.data-index]="i">
+  <th scope="row">{{i+1}}</th>
+    <td>{{rating.points}}</td>
+    <td *ngIf="rating.track && rating.track.name" style="cursor: pointer" (click)="goToTrackPage(rating.track)">{{rating.track.name}}</td>
+  </tr>
+  </tbody>
+</table>

@@ -1,0 +1,29 @@
+<form class="">
+  <div class="alert alert-success" role="alert" *ngIf="this.successMsg">
+    {{this.successMsg}}
+  </div>
+  <div *ngIf="currentFileUpload" class="progress" style="margin-bottom: 15px">
+    <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
+         attr.aria-valuenow="{{progress.percentage}}"
+         aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width:progress.percentage+'%'}">
+      {{progress.percentage}}%
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="name" class="col-sm-3 col-form-label">Name</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" id="name" placeholder="name" [(ngModel)]="playlistOrAlbum.name" name="name">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="image" class="col-sm-3 col-form-label">Select banner file *jpg</label>
+    <label class="btn btn-default col-sm-9">
+      <input type="file" class="form-control" (change)="selectFile($event)" id="image">
+    </label>
+  </div>
+  <div class="form-group row">
+    <button class="btn btn-success" style="margin-left: 15px;" [disabled]="!selectedFiles" (click)="upload()">Create {{domainObject}}</button>
+  </div>
+</form>
+
+

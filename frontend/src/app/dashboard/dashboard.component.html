@@ -1,0 +1,59 @@
+<div class="row mh-form">
+  <div class="col-2 mh-col-left">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <div class="mh-side-heading">YOUR LIBRARY</div>
+      <a class="nav-link active" id="v-pills-playlists-tab" data-toggle="pill" href="#v-pills-playlists" role="tab"
+         aria-controls="v-pills-playlists" aria-selected="false">Playlists</a>
+      <a class="nav-link" id="v-pills-tracks-tab" data-toggle="pill" href="#v-pills-tracks" role="tab"
+         aria-controls="v-pills-tracks" aria-selected="true" *ngIf="person && person.dType=='ARTIST'">Tracks</a>
+      <a class="nav-link" id="v-pills-albums-tab" data-toggle="pill" href="#v-pills-albums" role="tab"
+         aria-controls="v-pills-albums" aria-selected="false" *ngIf="person&&person.dType=='ARTIST'">Albums</a>
+      <a class="nav-link" id="v-pills-likes-tab" data-toggle="pill" href="#v-pills-likes" role="tab"
+         aria-controls="v-pills-likes" aria-selected="true" *ngIf="person&&person.dType=='CRITIC'">Likes</a>
+      <a class="nav-link" id="v-pills-reviews-tab" data-toggle="pill" href="#v-pills-reviews" role="tab"
+         aria-controls="v-pills-reviews" aria-selected="true" *ngIf="person&&person.dType=='CRITIC'">Reviews</a>
+      <a class="nav-link" id="v-pills-ratings-tab" data-toggle="pill" href="#v-pills-ratings" role="tab"
+         aria-controls="v-pills-ratings" aria-selected="true" *ngIf="person&&person.dType=='CRITIC'">Ratings</a>
+      <a class="nav-link" id="v-pills-advertisements-tab" data-toggle="pill" href="#v-pills-advertisements" role="tab"
+         aria-controls="v-pills-advertisements" aria-selected="false" *ngIf="person&&person.dType=='ADVERTISER'">Advertisements</a>
+
+      <div class="mh-side-heading">FRIENDS</div>
+
+      <a class="nav-link" id="v-pills-followers-tab" data-toggle="pill" href="#v-pills-followers" role="tab"
+         aria-controls="v-pills-followers" aria-selected="false">Followers</a>
+      <a class="nav-link" id="v-pills-following-tab" data-toggle="pill" href="#v-pills-following" role="tab"
+         aria-controls="v-pills-following" aria-selected="false">Following</a>
+    </div>
+  </div>
+  <div class="col-10">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="v-pills-playlists" role="tabpanel" aria-labelledby="v-pills-playlists-tab">
+        <app-dashboard-right-pane domainObject="playlist"></app-dashboard-right-pane>
+      </div>
+      <div class="tab-pane fade" id="v-pills-tracks" role="tabpanel" aria-labelledby="v-pills-tracks-tab">
+        <app-dashboard-right-pane domainObject="track" *ngIf="person&&person.dType=='ARTIST'"></app-dashboard-right-pane>
+      </div>
+      <div class="tab-pane fade" id="v-pills-albums" role="tabpanel" aria-labelledby="v-pills-albums-tab">
+        <app-dashboard-right-pane domainObject="album" *ngIf="person&&person.dType=='ARTIST'"></app-dashboard-right-pane>
+      </div>
+      <div class="tab-pane fade" id="v-pills-likes" role="tabpanel" aria-labelledby="v-pills-likes-tab">
+        <app-critique domainObject="like" *ngIf="person&&person.dType=='CRITIC'"></app-critique>
+      </div>
+      <div class="tab-pane fade" id="v-pills-reviews" role="tabpanel" aria-labelledby="v-pills-reviews-tab">
+        <app-critique domainObject="review" *ngIf="person&&person.dType=='CRITIC'"></app-critique>
+      </div>
+      <div class="tab-pane fade" id="v-pills-ratings" role="tabpanel" aria-labelledby="v-pills-ratings-tab">
+        <app-critique domainObject="rating" *ngIf="person&&person.dType=='CRITIC'"></app-critique>
+      </div>
+      <div class="tab-pane fade" id="v-pills-advertisements" role="tabpanel" aria-labelledby="v-pills-advertisements-tab">
+        <app-dashboard-right-pane domainObject="advertisement" *ngIf="person&&person.dType=='ADVERTISER'"></app-dashboard-right-pane>
+      </div>
+      <div class="tab-pane fade" id="v-pills-followers" role="tabpanel" aria-labelledby="v-pills-followers-tab">
+        <app-friends domainObject="followers" *ngIf="person&&person.followers&&person.followers.length>0" [resultList]="person.followers"></app-friends>
+      </div>
+      <div class="tab-pane fade" id="v-pills-following" role="tabpanel" aria-labelledby="v-pills-following-tab">
+        <app-friends domainObject="following" *ngIf="person&&person.following&&person.following.length>0" [resultList]="person.following"></app-friends>
+      </div>
+    </div>
+  </div>
+</div>

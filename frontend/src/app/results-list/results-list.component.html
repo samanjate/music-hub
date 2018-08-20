@@ -1,0 +1,59 @@
+<div class="card-columns">
+  <!-- Button trigger modal -->
+  <button *ngIf="myLibrary=='true'&&domainObject!='advertisement'" (click)="htmlInsideModal.open()"
+          class="card btn btn-light">
+    <fa-icon [icon]="faPlusCircle" [icon]="faPlusCircle" style="position: relative;left: 150%;font-size: 5.5vw"
+             class="mh-icon"></fa-icon>
+  </button>
+  <modal #htmlInsideModal [closeOnOutsideClick]="false">
+    <div style="margin-top: 20px">
+      <ng-template #modalBody>
+        <h4>Create {{domainObject}}</h4>
+        <app-create-track-form [loggedInUser]="person" *ngIf="domainObject==='track'"></app-create-track-form>
+        <app-create-playlist-album-form [domainObject]="domainObject"
+                                        *ngIf="domainObject==='playlist'||domainObject==='album'"></app-create-playlist-album-form>
+        <button type="button" class="btn btn-danger" (click)="refreshList(htmlInsideModal)">&nbsp; Close&nbsp;</button>
+      </ng-template>
+    </div>
+  </modal>
+
+  <div class="card" *ngFor="let result of resultList">
+    <img class="card-img-top" *ngIf="result.imageURL" [src]="result.imageURL">
+    <img class="card-img-top" *ngIf="result.imageUrl" [src]="result.imageUrl">
+    <img class="card-img-top" *ngIf="result.images && result.images.length>0" [src]="result.images[0].url"
+         alt="Card image cap"/>
+    <img class="card-img-top" *ngIf="result.links && result.links.images && result.links.images.length>0"
+         [src]="result.links.images[0].href"
+         alt="Card image cap"/>
+
+    <div class="card-body">
+      <h5 class="card-title" *ngIf="domainObject" [routerLink]="['/' + domainObject, result.id]">{{result.name}}</h5>
+      <p class="card-text" *ngIf="result.artistName">{{result.artistName}}<br/>
+        <span class="card-text small" *ngIf="result.albumName">{{result.albumName}}</span>
+      </p>
+      <p class="card-text" *ngIf="result.artist && result.artist.username">{{result.artist.username}}<br/>
+        <span class="card-text small" *ngIf="result.albums && result.albums[0].name">{{result.albumName}}</span>
+      </p>
+      <p class="card-text" *ngIf="result.description">{{result.description}}</p>
+      <p class="card-text" *ngIf="result.username">{{result.username}}</p>
+      <p class="card-text" *ngIf="domainObject=='track'&&person">
+        <button class="btn mh-add-icon" (click)="addToPersonPlaylist.open()">
+          <fa-icon [icon]="faPlus" style="font-size: 15px"></fa-icon>
+        </button>
+      </p>
+
+      <modal #addToPersonPlaylist>
+        <ng-template #modalBody>
+          <h4>Add to Playlist/Album</h4>
+          <app-track-to-playlist [trackToAdd]="result"></app-track-to-playlist>
+        </ng-template>
+      </modal>
+    </div>
+
+    <div class="card-footer" *ngIf="result.previewURL">
+      <audio class="text-center" controls="controls" *ngIf="result.previewURL" style="width: 100%;">
+        <source src="{{result.previewURL}}" type="audio/mpeg">
+      </audio>
+    </div>
+  </div>
+</div>

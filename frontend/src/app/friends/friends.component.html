@@ -1,0 +1,7 @@
+<ul class="list-group col-6">
+  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let result of resultList">{{result.username}}
+    <div *ngIf="result.firstName||result.lastName"> ({{result.firstName}} {{result.lastName}})</div>
+    <span #followBtn class="badge badge-primary mh-follow-btn" *ngIf="domainObject=='people'&&person && person.id!=result.id && result.follow==false" (click)="followPerson(followBtn,result)">Follow</span>
+    <span #unfollowBtn class="badge badge-success mh-follow-btn" *ngIf="domainObject=='people'&&person && person.id!=result.id && result.follow==true" (click)="unfollowPerson(unfollowBtn,result)">Unfollow</span>
+  </li>
+</ul>

@@ -1,0 +1,84 @@
+<div class="background-image" [ngStyle]="{'background-image': 'url(' + imageURL + ')'}"></div>
+<div class="main__container">
+  <div class="contain__wrapper">
+    <div class="music__wrapper">
+      <div class="left__panel">
+        <div class="cover owl-carousel">
+          <div class="item">
+            <img style="width: 100%" [src]="imageURL"/>
+          </div>
+          <div style="background: #3e4147; width: 500px;  height: 163px; overflow: auto; padding-left: 10px; padding-top: 5px;
+                      padding-bottom: 5px; margin-top: 0px !important;">
+            <p style="color: #5bc0de; font-size: 1.15em; font-weight: 300; letter-spacing: 1px;
+              text-transform: uppercase;" *ngFor="let album of albums; let i = index" [innerHTML]="bio"></p>
+          </div>
+        </div>
+      </div>
+      <div class="right__panel">
+        <div class="music__info__wrapper">
+          <div class="header">
+            <div class="icon__wrapper">
+              <span class="icon-right"><i class="zmdi zmdi-apps"></i></span>
+              <div class="title owl-carousel">
+                <div class="item">
+                  <div class="song__name" *ngIf="artistResult">{{artistResult.name}}</div>
+                  <p class="album__name" style="margin-top: 20px" *ngIf="albums">List of albums</p>
+                  <div class="music__button">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="background: #3e4147; width: 500px;  height: 380px; overflow: auto; padding-left: 10px; padding-top: 5px;
+                      padding-bottom: 5px">
+            <ul *ngIf="albums">
+              <li style="color: #5bc0de; font-size: 1.15em; font-weight: 300; letter-spacing: 1px;
+              text-transform: uppercase;" *ngFor="let album of albums; let i = index"
+                  [attr.data-index]="i" (click)="goToAlbumPage(album.id)">{{i+1}}. {{album.name}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="advertisement__wrapper">
+      <div class="add__button">
+        <button class="btn btn-block btn-group-lg btn__wrapper " type="button"
+                (click)="createAdvertisementModal.open()">Create
+          Advertisement
+        </button>
+      </div>
+      <div class="adslist__wrapper">
+        <app-advertisement [artistId]="finalArtistId" [advertiserId]="person.id" [isNapst]="isNapster"></app-advertisement>
+      </div>
+    </div>
+  </div>
+</div>
+
+<modal #createAdvertisementModal [closeOnOutsideClick]="false">
+  <div style="margin-top: 20px">
+    <ng-template #modalBody>
+      <h4>Create Advertisement</h4>
+      <div class="alert alert-success" role="alert" *ngIf="successMsg">{{successMsg}}</div>
+      <div class="form-group">
+        <label for="inputName">Name</label>
+        <input type="text" class="form-control" id="inputName" placeholder="Ad name"
+               [(ngModel)]="newAdvertisement.name">
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                  [(ngModel)]="newAdvertisement.description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="inputBannerUrl">Name</label>
+        <input type="text" class="form-control" id="inputBannerUrl" placeholder="banner URL"
+               [(ngModel)]="newAdvertisement.imageUrl">
+      </div>
+      <button type="button" class="btn btn-success" (click)="addAvertisement(newAdvertisement)">Create</button>
+      <button type="button" class="btn btn-danger" (click)="refreshAdvertsements(createAdvertisementModal)">Close
+      </button>
+    </ng-template>
+  </div>
+</modal>

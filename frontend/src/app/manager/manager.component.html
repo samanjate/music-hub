@@ -1,0 +1,66 @@
+<button type="button" class="btn btn-success" (click)="htmlInsideModal.open()">Add</button>
+<table style="margin-top: 10px" class="table table-hover" *ngIf="resultSet">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Password</th>
+      <th scope="col">Email</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let result of resultSet; let i = index" [attr.data-index]="i" >
+      <th scope="row">{{i+1}}</th>
+
+      <td *ngIf="!edit">{{result.firstName}} {{result.lastName}}</td>
+      <td *ngIf="edit"><input type="text" class="form-control" [(ngModel)]="result.firstName">
+        <input type="text" class="form-control" [(ngModel)]="result.lastName"></td>
+
+
+      <td *ngIf="!edit">{{result.username}}</td>
+      <td *ngIf="edit"><input type="text" class="form-control" [(ngModel)]="result.username"></td>
+
+      <td *ngIf="!edit">{{result.password}}</td>
+      <td *ngIf="edit"><input type="password" class="form-control" [(ngModel)]="result.password"></td>
+
+      <td *ngIf="!edit">{{result.email}}</td>
+      <td *ngIf="edit"><input type="email" class="form-control" [(ngModel)]="result.email"></td>
+
+      <td><button *ngIf="!edit" type="button" class="btn btn-primary"
+                  (click)="edit = true;" style="margin-right: 5px">Edit</button>
+        <button *ngIf="edit" type="button" class="btn btn-primary"
+                (click)="update(result); edit = false" style="margin-right: 5px">Update</button>
+
+        <button *ngIf="!edit" type="button" class="btn btn-danger" (click)="delete(result.id)">Delete</button>
+      <button *ngIf="edit" (click)="edit = false" type="button"
+              class="btn btn-danger">Cancel</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<modal #htmlInsideModal [closeOnOutsideClick]="false">
+  <div>
+    <ng-template #modalBody>
+      <h4><b>New {{entity}} by</b></h4>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputEmail3" placeholder="Username" [(ngModel)]="newResult.username" name="username">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="inputPassword3" placeholder="Password" [(ngModel)]="newResult.password" name="password">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="inputPassword4" placeholder="Confirm Password" [(ngModel)]="newResult.confirmPassword"  name="confirmPassword">
+        </div>
+      </div>
+      <button [disabled]="!newResult.username || !newResult.password || !newResult.confirmPassword"
+              type="button" class="btn btn-success" (click)="add(); htmlInsideModal.close();">Create</button>
+    </ng-template>
+  </div>
+</modal>

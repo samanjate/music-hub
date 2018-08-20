@@ -1,0 +1,16 @@
+
+<div class="music__control">
+  <input *ngIf="!this.prevRating" type="range" min="0" max="10" [(ngModel)]="this.rating" step="1" />
+  <input *ngIf="this.prevRating" style="margin-left: 17%;" type="range" min="0" max="10" [(ngModel)]="this.rating" step="1" />
+  <h1 style="margin-left: 47%; margin-top: 5%">{{this.rating}}</h1>
+  <div class="form-group row">
+    <button *ngIf="!this.prevRating" class="btn btn-success" style="margin-left: 42%; margin-top: 2%" [disabled]="this.rating == 0 || this.rated" (click)="rateTrack()">Rate</button>
+    <button *ngIf="this.prevRating" class="btn btn-info" style="margin-left: 40%; margin-top: 2%" [disabled]="this.rating == 0 || this.rated" (click)="updateRateTrack()">Rate Again</button>
+  </div>
+  <div *ngIf="this.rated" class="alert alert-success" role="alert">
+    <strong>Rated!</strong> You have rated this song with {{this.rating}} points.
+  </div>
+  <div *ngIf="this.prevRating && !this.rated" class="alert alert-info" role="alert">
+    <strong>Already rated!</strong> You previously rated this song with {{this.prevRating}} points.
+  </div>
+</div>
