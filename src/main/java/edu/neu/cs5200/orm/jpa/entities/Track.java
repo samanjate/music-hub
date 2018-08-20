@@ -59,7 +59,7 @@ public class Track implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "tracks", cascade = CascadeType.ALL)
 	@Fetch(value = FetchMode.SUBSELECT)
 	@JsonIgnore
-	private List<Genre> playlists;
+	private List<Playlist> playlists;
 
 	@OneToMany(mappedBy = "track")
 	private List<Rating> ratings;
@@ -146,11 +146,11 @@ public class Track implements Serializable {
 		this.ratings = ratings;
 	}
 
-	public List<Genre> getPlaylists() {
+	public List<Playlist> getPlaylists() {
 		return playlists;
 	}
 
-	public void setPlaylists(List<Genre> playlists) {
+	public void setPlaylists(List<Playlist> playlists) {
 		this.playlists = playlists;
 	}
 

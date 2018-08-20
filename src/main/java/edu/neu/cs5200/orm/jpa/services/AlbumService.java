@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +20,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.neu.cs5200.aws.S3Connection;
 import edu.neu.cs5200.orm.jpa.entities.Album;
 import edu.neu.cs5200.orm.jpa.entities.Artist;
+import edu.neu.cs5200.orm.jpa.entities.Review;
+import edu.neu.cs5200.orm.jpa.entities.Track;
 import edu.neu.cs5200.orm.jpa.repositories.AlbumRepository;
 import edu.neu.cs5200.orm.jpa.repositories.ArtistRepository;
+import edu.neu.cs5200.orm.jpa.repositories.ReviewRepository;
+import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -31,6 +36,12 @@ public class AlbumService {
 
 	@Autowired
 	ArtistRepository artistRepository;
+	
+	@Autowired
+	TrackRepository trackRepository;
+	
+	@Autowired
+	ReviewRepository reviewRepository;
 	
 	Session sessionManager = Session.getInstance();
 
@@ -83,5 +94,20 @@ public class AlbumService {
 		}
 	}
 	
-	
+	@DeleteMapping("/api/album/{aid}")
+	public ResponseEntity<HttpStatus> deleteTrackById(@PathVariable("aid") int aid) {
+		Optional<Album> oAlbum = albumRepository.findById(aid);
+		if(oAlbum.isPresent()) {
+			Album album = oAlbum.get();
+			for(Track t: album.getTracks()) {
+				trackRepository.delete(t);
+			}
+			for(Review r : album.getReviews()) {
+				reviewRepository.delete(r);
+			}
+			albumRepository.delete(album);
+			return ResponseEntity.ok(HttpStatus.OK);
+		}
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+	}
 }

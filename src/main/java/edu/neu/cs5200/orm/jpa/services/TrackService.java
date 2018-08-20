@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +21,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.neu.cs5200.aws.S3Connection;
 import edu.neu.cs5200.orm.jpa.entities.Album;
 import edu.neu.cs5200.orm.jpa.entities.Artist;
+import edu.neu.cs5200.orm.jpa.entities.Critic;
+import edu.neu.cs5200.orm.jpa.entities.Playlist;
+import edu.neu.cs5200.orm.jpa.entities.Rating;
 import edu.neu.cs5200.orm.jpa.entities.Track;
 import edu.neu.cs5200.orm.jpa.repositories.AlbumRepository;
 import edu.neu.cs5200.orm.jpa.repositories.ArtistRepository;
+import edu.neu.cs5200.orm.jpa.repositories.CriticRepository;
+import edu.neu.cs5200.orm.jpa.repositories.PlaylistRepository;
+import edu.neu.cs5200.orm.jpa.repositories.RatingRepository;
 import edu.neu.cs5200.orm.jpa.repositories.TrackRepository;
 
 @RestController
@@ -37,6 +44,15 @@ public class TrackService {
 
 	@Autowired
 	AlbumRepository albumRepository;
+	
+	@Autowired
+	PlaylistRepository playlistRepository;
+	
+	@Autowired
+	CriticRepository criticRepository;
+	
+	@Autowired
+	RatingRepository ratingRepository;
 	
 	Session sessionManager = Session.getInstance();
 	
@@ -119,5 +135,31 @@ public class TrackService {
 		Artist a = new Artist();
 		a.setId(artistId);
 		return trackRepository.findTracksByArtistId(a);
+	}
+	
+	@DeleteMapping("/api/track/{tid}")
+	public ResponseEntity<HttpStatus> deleteTrackById(@PathVariable("tid") int tid) {
+		Optional<Track> oTrack = trackRepository.findById(tid);
+		if(oTrack.isPresent()) {
+			Track track = oTrack.get();
+			for(Album a : track.getAlbums()) {
+				a.getTracks().remove(track);
+				albumRepository.save(a);
+			}
+			for(Playlist p: track.getPlaylists()) {
+				p.getTracks().remove(track);
+				playlistRepository.save(p);
+			}
+			for(Critic c : track.getLikers()) {
+				c.getLikes().remove(track);
+				criticRepository.save(c);
+			}
+			for(Rating r : track.getRatings()) {
+				ratingRepository.delete(r);
+			}
+			trackRepository.delete(track);
+			return ResponseEntity.ok(HttpStatus.OK);
+		}
+		return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
 	}
 }
